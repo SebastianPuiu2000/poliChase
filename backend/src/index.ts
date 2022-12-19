@@ -1,13 +1,19 @@
-import { any } from "joi";
-import {connect} from "./mongo"
+import express from "express"
+import bodyParser from "body-parser"
 
-console.log("hello world!")
+import { connectMongo } from "./mongo"
+import { register } from "./handlers/register"
 
+const main = async () => {
+  await connectMongo();
 
+  const app = express();
 
+  app.use(bodyParser.json());
 
-connect();
+  app.post('/register', register);
 
+  app.listen(3000, () => console.log("server started"));
+}
 
-
-
+main()
