@@ -1,9 +1,15 @@
 import { Schema } from "mongoose";
 import { Document, Model } from "mongoose";
 import { model } from "mongoose";
+// import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
+
 ///////
 const Joi = require('joi');
 ///////
+
+const saltRounds = 10;
+var password ="Fkdj45ciJad";
 
 export interface IUser {
     name: string,
@@ -35,6 +41,8 @@ const UserSchema = new Schema({
     }
 });
 
+const UserModel = model<IUserDocument>("user", UserSchema);
+
 function validateUser(user: IUser) {
     const schema = {
         name: Joi.string().min(5).max(50).required(),
@@ -44,7 +52,16 @@ function validateUser(user: IUser) {
     return Joi.validate(user, schema);
 }
 
-const UserModel = model<IUserDocument>("user", UserSchema);
+
+export function createUser(name: string, email:string, password:string) {
+    bcrypt.genSalt(saltRounds, function(err, salt) {
+        bcrypt.hash(password, salt, function(err, hash) {
+            UserModel.create({name:name, email:email, password: hash} )
+        });
+    });
+}
+
+
 
 exports.UserSchema = UserSchema;
 exports.UserModel = UserModel;
