@@ -3,10 +3,6 @@ import { Document, Model } from "mongoose";
 import { model } from "mongoose";
 import bcrypt from 'bcrypt';
 
-///////
-const Joi = require('joi');
-///////
-
 export interface IUser {
   name: string,
   email: string,
@@ -39,15 +35,6 @@ const UserSchema = new Schema({
 
 const UserModel = model<IUserDocument>("user", UserSchema);
 
-const validateUser = (user: IUser) => {
-  const schema = {
-    name: Joi.string().min(5).max(50).required(),
-    email: Joi.string().min(5).max(255).required().email(),
-    password: Joi.string().min(5).max(255).required()
-  };
-  return Joi.validate(user, schema);
-}
-
 const createUser = (name: string, email: string, password: string) => {
   const saltRounds = 10;
   bcrypt.genSalt(saltRounds, function(err, salt) {
@@ -60,4 +47,4 @@ const createUser = (name: string, email: string, password: string) => {
 exports.UserSchema = UserSchema;
 exports.UserModel = UserModel;
 
-export default { UserModel, methods: { createUser, validateUser } }
+export default { UserModel, methods: { createUser } }
