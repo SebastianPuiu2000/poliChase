@@ -55,8 +55,8 @@ export class MapComponent implements OnInit, OnDestroy {
   graphicsLayer: esri.GraphicsLayer;
 
   // Attributes
-  zoom = 10;
-  center: Array<number> = [-118.73682450024377, 34.07817583063242];
+  zoom = 15;
+  center: Array<number> = [26.049249, 44.439862];
   basemap = "streets-vector";
   loaded = false;
   pointCoords: number[] = [-118.73682450024377, 34.07817583063242];
