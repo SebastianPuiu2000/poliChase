@@ -30,16 +30,20 @@ const UserSchema = new Schema({
     required: true,
     minlength: 5,
     maxlength: 1024
+  },
+  coordinates: {
+    type: [Number],
+    index: "2dsphere"
   }
 });
 
 const UserModel = model<IUserDocument>("user", UserSchema);
 
-const createUser = (name: string, email: string, password: string) => {
+const createUser = (name: string, email: string, password: string, coordinates: number[]) => {
   const saltRounds = 10;
   bcrypt.genSalt(saltRounds, function(err, salt) {
     bcrypt.hash(password, salt, function(err, hash) {
-      UserModel.create({ name: name, email: email, password: hash })
+      UserModel.create({ name: name, email: email, password: hash, coordinates: coordinates })
     });
   });
 }
