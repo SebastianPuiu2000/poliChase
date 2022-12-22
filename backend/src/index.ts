@@ -15,12 +15,12 @@ const main = async () => {
 
 // TESTING ZONE START //
   // const persons = [
-  //   { name: "Mihnea1", email: "mihnea1@yahoo.com", password: "parola", coordinates: [125.4, 15.4] },
-  //   { name: "Sebastian1", email: "sebi1@yahoo.com", password: "password", coordinates: [1.3, 3.6] }
+  //   { name: "Mihnea2", email: "mihnea2@yahoo.com", password: "parola", coordinates: [125.4, 15.4], bomb: false, cooldown: 0, score: 0 },
+  //   { name: "Sebastian2", email: "sebi2@yahoo.com", password: "password", coordinates: [1.3, 3.6], bomb: false, cooldown: 0, score: 0 }
   // ];
 
   // for (const person of persons) {
-  //   user.methods.createUser(person.name, person.email, person.password, person.coordinates);
+  //   user.methods.createUser(person.name, person.email, person.password, person.coordinates, person.bomb, person.cooldown, person.score);
   //   console.log(`Created user ${person.name} ${person.email}`);
   // }
 // TESTING ZONE END //

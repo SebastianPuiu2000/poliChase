@@ -1,54 +1,82 @@
 import { Schema } from "mongoose";
 import { Document, Model } from "mongoose";
 import { model } from "mongoose";
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 
 export interface IUser {
-  name: string,
-  email: string,
-  password: string
+  name: string;
+  email: string;
+  password: string;
 }
-export interface IUserDocument extends IUser, Document { }
-export interface IUserModel extends Model<IUserDocument> { }
+export interface IUserDocument extends IUser, Document {}
+export interface IUserModel extends Model<IUserDocument> {}
 
 const UserSchema = new Schema({
   name: {
     type: String,
     required: true,
     minlength: 5,
-    maxlength: 50
+    maxlength: 50,
   },
   email: {
     type: String,
     required: true,
     minlength: 5,
     maxlength: 255,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
     required: true,
     minlength: 5,
-    maxlength: 1024
+    maxlength: 1024,
   },
   coordinates: {
     type: [Number],
-    index: "2dsphere"
-  }
+    index: "2dsphere",
+  },
+  bomb: {
+    type: Boolean,
+    required: true,
+  },
+  cooldown: {
+    type: Number,
+    required: true,
+  },
+  score: {
+    type: Number,
+    required: true,
+  },
 });
 
 const UserModel = model<IUserDocument>("user", UserSchema);
 
-const createUser = (name: string, email: string, password: string, coordinates: number[]) => {
+const createUser = (
+  name: string,
+  email: string,
+  password: string,
+  coordinates: number[],
+  bomb: boolean,
+  cooldown: number,
+  score: number
+) => {
   const saltRounds = 10;
-  bcrypt.genSalt(saltRounds, function(err, salt) {
-    bcrypt.hash(password, salt, function(err, hash) {
-      UserModel.create({ name: name, email: email, password: hash, coordinates: coordinates })
+  bcrypt.genSalt(saltRounds, function (err, salt) {
+    bcrypt.hash(password, salt, function (err, hash) {
+      UserModel.create({
+        name: name,
+        email: email,
+        password: hash,
+        coordinates: coordinates,
+        bomb: bomb,
+        cooldown: cooldown,
+        score: score,
+      });
     });
   });
-}
+};
 
 exports.UserSchema = UserSchema;
 exports.UserModel = UserModel;
 
-export default { UserModel, methods: { createUser } }
+export default { UserModel, methods: { createUser } };
