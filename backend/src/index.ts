@@ -49,11 +49,10 @@ const main = async () => {
 
   app.listen(3000, () => console.log("server started"));
 
-  //// WEBSOCKETS ////
   const wss = new WebSocketServer({ port: 8080 });
 
-  let sockets: Array<any>;
   let coord: Coord[] = [];
+  let sockets = new Map();
 
   wss.on("connection", function connection(socket, req) {
     const token = getToken(req.url);
@@ -68,15 +67,16 @@ const main = async () => {
       return socket.close();
     }
 
-    sockets[payload.id] = socket;
+    sockets.set(payload.id, socket);
 
     socket.on("message", async (bytes) => {
-      const msg = bytes.toString().split(" ,");
+      const msg = bytes.toString().split(" ");
 
-      if (msg[0] === "move") {
-        coord[payload.id].lat = parseFloat(msg[1]);
-        coord[payload.id].lon = parseFloat(msg[2]);
-      }
+      if (msg[0] === "move")
+        coord[payload.id] = {
+          lat: parseFloat(msg[1]),
+          lon: parseFloat(msg[2]),
+        };
     });
 
     socket.on("close", async (_) => {
