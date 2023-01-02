@@ -12,6 +12,13 @@ import jwt from "jsonwebtoken";
 
 const secret = "123456";
 
+function collisionFunc(p1_X: number, p1_Y: number, p2_X: number, p2_Y: number) {
+  let r = 2.0;
+
+  if ((r + r) ** 2 > (p1_X - p2_X) ** 2 + (p1_Y - p2_Y) ** 2) return true;
+  else return false;
+}
+
 interface Coord {
   lat: number;
   lon: number;
