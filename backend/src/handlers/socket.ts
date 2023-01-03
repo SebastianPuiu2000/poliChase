@@ -14,18 +14,19 @@ function getToken(url: string | undefined): string | null {
 }
 
 interface Coord {
-  lat: number;
-  lon: number;
+  lat: number,
+  lon: number
 }
 
-interface Pay {
-    id: number;
+interface Player {
+    socket: any,
+    coords: Coord
 }
 
 export const listen = (socketPort: number) => {
   const wss = new WebSocketServer({ port: socketPort });
 
-  let sockets = new Map();
+  let sockets = new Map <string, Player> ();
 
   wss.on("connection", function connection(socket, req) {
     const token = getToken(req.url);
@@ -40,11 +41,9 @@ export const listen = (socketPort: number) => {
       return socket.close();
     }
 
-    // let payload: Pay = {id: 1};
+    if (sockets.has(payload.id)) return socket.close();
 
-    if (sockets.has(socket)) return socket.close();
-
-    sockets.set(payload.id, { socket: socket, coords: undefined });
+    sockets.set(payload.id, { socket: socket, coords: {lat: 0.0, lon: 0.0} });
 
     socket.on("message", async (bytes) => {
       const msg = bytes.toString().split(" ");
