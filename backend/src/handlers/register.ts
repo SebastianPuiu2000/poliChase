@@ -4,14 +4,12 @@ import user from "../models/user";
 export const register: RequestHandler = async (req, res) => {
   let record = req.body;
   let score = 0;
-  let bomb = false;
-  let cooldown = 0;
+  let color = "green";
 
   if (
     !record["name"] ||
     !record["email"] ||
-    !record["password"] ||
-    !record["coordinates"]
+    !record["password"]
   ) {
     return res.json({ success: false });
   }
@@ -20,10 +18,8 @@ export const register: RequestHandler = async (req, res) => {
     record["name"],
     record["email"],
     record["password"],
-    record["coordinates"],
-    bomb,
-    cooldown,
-    score
+    score,
+    color
   );
   res.json({ success: true });
 };

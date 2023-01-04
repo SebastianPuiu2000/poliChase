@@ -1,17 +1,5 @@
 import { WebSocketServer } from "ws";
-
-import { parse } from "url";
-import jwt from "jsonwebtoken";
-
-const jwtSecret: string = process.env.JWT_SECRET || "123456";
-
-function getToken(url: string | undefined): string | null {
-  const token = parse(url || "", true).query.token;
-
-  if (!token) return null;
-
-  return token.toString();
-}
+import { getToken, verify } from "../jwt";
 
 interface Coord {
   lat: number,
@@ -36,7 +24,7 @@ export const listen = (socketPort: number) => {
     var payload: any;
 
     try {
-      payload = jwt.verify(token, jwtSecret);
+      payload = verify(token);
     } catch (e) {
       return socket.close();
     }

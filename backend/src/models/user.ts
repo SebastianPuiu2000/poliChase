@@ -16,37 +16,29 @@ const UserSchema = new Schema({
     type: String,
     required: true,
     minlength: 5,
-    maxlength: 50,
+    maxlength: 50
   },
   email: {
     type: String,
     required: true,
     minlength: 5,
     maxlength: 255,
-    unique: true,
+    unique: true
   },
   password: {
     type: String,
     required: true,
     minlength: 5,
-    maxlength: 1024,
-  },
-  coordinates: {
-    type: [Number],
-    index: "2dsphere",
-  },
-  bomb: {
-    type: Boolean,
-    required: true,
-  },
-  cooldown: {
-    type: Number,
-    required: true,
+    maxlength: 1024
   },
   score: {
     type: Number,
-    required: true,
+    required: true
   },
+  color: {
+    type: String,
+    required: true
+  }
 });
 
 const UserModel = model<IUserDocument>("user", UserSchema);
@@ -55,10 +47,8 @@ const createUser = (
   name: string,
   email: string,
   password: string,
-  coordinates: number[],
-  bomb: boolean,
-  cooldown: number,
-  score: number
+  score: number,
+  color: string
 ) => {
   const saltRounds = 10;
   bcrypt.genSalt(saltRounds, function (err, salt) {
@@ -67,10 +57,8 @@ const createUser = (
         name: name,
         email: email,
         password: hash,
-        coordinates: coordinates,
-        bomb: bomb,
-        cooldown: cooldown,
         score: score,
+        color: color
       });
     });
   });
