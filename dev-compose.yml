@@ -1,0 +1,39 @@
+version: "3.1"
+services:
+
+  mongo:
+    container_name: polichase-mongo
+    image: mongo
+    volumes:
+      - ~/data/mongo:/data/db
+    command: mongod --quiet --logpath /dev/null
+
+  backend:
+    container_name: polichase-backend
+    build:
+      dockerfile: Dockerfile
+      context: ./backend
+    environment:
+      MONGO: mongo
+      JWT_SECRET: supersecret
+    ports:
+      - 3000:3000
+      - 3001:3001
+    volumes:
+      - ./backend/src:/app/src
+    links:
+      - mongo
+
+  frontend:
+    container_name: polichase-frontend
+    build:
+      dockerfile: Dockerfile
+      context: ./frontend
+    environment:
+      BACKEND: backend
+    ports:
+      - 4200:4200
+    volumes:
+      - ./frontend/src:/app/src
+    links:
+      - backend

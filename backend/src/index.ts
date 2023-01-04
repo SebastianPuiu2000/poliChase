@@ -1,11 +1,10 @@
 import express from "express";
 import bodyParser from "body-parser";
-import user from "./models/user";
 
 import { connectMongo } from "./mongo";
 import { register } from "./handlers/register";
 import { login } from "./handlers/login";
-import { listen } from "./handlers/socket";
+import websocket from "./handlers/socket";
 
 function collisionFunc(p1_X: number, p1_Y: number, p2_X: number, p2_Y: number) {
   let r = 2.0;
@@ -26,7 +25,7 @@ const main = async () => {
 
   app.listen(3000, () => console.log("server started"));
 
-  listen(8080);
+  websocket.listen(3001);
 };
 
 main();

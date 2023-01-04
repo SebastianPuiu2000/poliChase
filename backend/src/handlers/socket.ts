@@ -17,7 +17,7 @@ interface PlayerInfo {
   color: string;
 }
 
-export const listen = (socketPort: number) => {
+const listen = (socketPort: number) => {
   const green = "green";
   const red = "red";
 
@@ -28,13 +28,17 @@ export const listen = (socketPort: number) => {
   wss.on("connection", function connection(socket, req) {
     const token = getToken(req.url);
 
-    if (!token) return socket.close();
+    if (!token) {
+      socket.send("unauthorized");
+      return socket.close();
+    }
 
     var payload: any;
 
     try {
       payload = verify(token);
     } catch (e) {
+      socket.send("unauthorized");
       return socket.close();
     }
 
@@ -51,12 +55,12 @@ export const listen = (socketPort: number) => {
 
       console.log(msg[0]);
 
-      if (msg[0] === "move")
-        sockets.set(payload.id, {
-          socket: socket,
-          coords: { lat: parseFloat(msg[1]), lon: parseFloat(msg[2]) },
-          color: green,
-        });
+      if (msg[0] === "move") {
+        const player = sockets.get(payload.id);
+        if (player) {
+          player.coords =  { lat: parseFloat(msg[1]), lon: parseFloat(msg[2]) };
+        }
+      }
     });
 
     const interval = setInterval(() => {
@@ -72,3 +76,5 @@ export const listen = (socketPort: number) => {
     });
   });
 };
+
+export default { listen }
