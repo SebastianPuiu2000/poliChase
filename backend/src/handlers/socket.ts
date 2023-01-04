@@ -1,4 +1,5 @@
-import { WebSocketServer } from "ws";
+import { JwtPayload } from "jsonwebtoken";
+import { WebSocketServer, WebSocket } from "ws";
 import { getToken, verify } from "../jwt";
 
 interface Coord {
@@ -6,48 +7,58 @@ interface Coord {
   lon: number;
 }
 
-interface Player {
-  socket: any;
-  coords: Coord;
-  color: string;
+const defaultCoord: Coord = {
+  lat: 0.0,
+  lon: 0.0
 }
 
-interface PlayerInfo {
+const defaultColor = "green";
+
+interface Player {
+  socket: WebSocket;
   coords: Coord;
   color: string;
 }
 
 const listen = (socketPort: number) => {
-  const green = "green";
-  const red = "red";
-
   const wss = new WebSocketServer({ port: socketPort });
 
   let sockets = new Map<string, Player>();
 
+  setInterval(() => {
+    const players = Array.from(sockets)
+      .filter(value => value[1].coords !== defaultCoord)
+      .map(value => ({
+        lat: value[1].coords.lat,
+        lon: value[1].coords.lon,
+        color: value[1].color
+      }))
+
+    const message = "active " + JSON.stringify(players);
+
+    for (const s of sockets.values()) {
+      s.socket.send(message);
+    }
+  }, 500);
+
   wss.on("connection", function connection(socket, req) {
     const token = getToken(req.url);
 
-    if (!token) {
-      socket.send("unauthorized");
-      return socket.close();
-    }
+    if (!token) return closeWithMessage(socket, "unauthorized");
 
-    var payload: any;
-
+    let payload: JwtPayload;
     try {
       payload = verify(token);
     } catch (e) {
-      socket.send("unauthorized");
-      return socket.close();
+      return closeWithMessage(socket, "unauthorized");
     }
 
-    if (sockets.has(payload.id)) return socket.close();
+    if (sockets.has(payload.id)) return closeWithMessage(socket, "unauthorized");
 
     sockets.set(payload.id, {
       socket: socket,
-      coords: { lat: 0.0, lon: 0.0 },
-      color: green,
+      coords: defaultCoord,
+      color: defaultColor,
     });
 
     socket.on("message", async (bytes) => {
@@ -58,23 +69,20 @@ const listen = (socketPort: number) => {
       if (msg[0] === "move") {
         const player = sockets.get(payload.id);
         if (player) {
-          player.coords =  { lat: parseFloat(msg[1]), lon: parseFloat(msg[2]) };
+          player.coords = { lat: parseFloat(msg[1]), lon: parseFloat(msg[2]) };
         }
       }
     });
 
-    const interval = setInterval(() => {
-      let players: PlayerInfo[] = [];
-      for (let value of sockets.values())
-        players.push({ coords: value.coords, color: value.color });
-      socket.send(players);
-    }, 1000);
-
     socket.on("close", async (_) => {
       sockets.delete(payload.id);
-      clearInterval(interval);
     });
   });
 };
+
+const closeWithMessage = (socket: WebSocket, message: string) => {
+  socket.send(message);
+  socket.close();
+}
 
 export default { listen }

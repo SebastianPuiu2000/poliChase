@@ -19,5 +19,11 @@ export const sign = (id: any, name: string, email: string) => {
 };
 
 export const verify = (token: string) => {
-  return jwt.verify(token, jwtSecret);
+  let payload = jwt.verify(token, jwtSecret);
+
+  if (typeof payload == "string") {
+    throw new Error();
+  }
+
+  return payload
 };
