@@ -1,5 +1,5 @@
 import type { RequestHandler } from "express";
-import user from "../models/user";
+import User from "../models/user";
 
 export const register: RequestHandler = async (req, res) => {
   let record = req.body;
@@ -14,12 +14,19 @@ export const register: RequestHandler = async (req, res) => {
     return res.json({ success: false });
   }
 
-  user.methods.createUser(
-    record["name"],
-    record["email"],
-    record["password"],
-    score,
-    color
-  );
-  res.json({ success: true });
+  try {
+    let user = await User.methods.createUser(
+      record["name"],
+      record["email"],
+      record["password"],
+      score,
+      color
+    );
+
+    if (user) {
+      return res.json({ success: true });
+    }
+  } catch {}
+
+  res.json({ success: false });
 };

@@ -45,7 +45,7 @@ const UserSchema = new Schema({
 
 const UserModel = model<IUserDocument>("user", UserSchema);
 
-const createUser = (
+const createUser = async (
   name: string,
   email: string,
   password: string,
@@ -53,14 +53,16 @@ const createUser = (
   color: string
 ) => {
   const saltRounds = 10;
-  bcrypt.genSalt(saltRounds, function (err, salt) {
-    bcrypt.hash(password, salt, function (err, hash) {
-      UserModel.create({
-        name: name,
-        email: email,
-        password: hash,
-        score: score,
-        color: color
+  return new Promise(resolve => {
+    bcrypt.genSalt(saltRounds, (_, salt) => {
+      bcrypt.hash(password, salt, (_, hash) => {
+        UserModel.create({
+          name: name,
+          email: email,
+          password: hash,
+          score: score,
+          color: color
+        }).then(resolve);
       });
     });
   });
