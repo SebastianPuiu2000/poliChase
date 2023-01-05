@@ -7,6 +7,8 @@ export interface IUser {
   name: string;
   email: string;
   password: string;
+  score: number;
+  color: string;
 }
 export interface IUserDocument extends IUser, Document {}
 export interface IUserModel extends Model<IUserDocument> {}

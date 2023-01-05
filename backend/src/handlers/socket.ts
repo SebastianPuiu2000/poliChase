@@ -1,6 +1,8 @@
 import { JwtPayload } from "jsonwebtoken";
 import { WebSocketServer, WebSocket } from "ws";
 import { getToken, verify } from "../jwt";
+import User from "../models/user";
+import { FilterQuery } from "mongoose";
 
 interface Coord {
   lat: number;
@@ -41,7 +43,7 @@ const listen = (socketPort: number) => {
     }
   }, 500);
 
-  wss.on("connection", function connection(socket, req) {
+  wss.on("connection", async function connection(socket, req) {
     const token = getToken(req.url);
 
     if (!token) return closeWithMessage(socket, "unauthorized");
@@ -55,10 +57,15 @@ const listen = (socketPort: number) => {
 
     if (sockets.has(payload.id)) return closeWithMessage(socket, "unauthorized");
 
+    const user = await User.UserModel.findOne({ _id: payload.id }).exec();
+
+    if(!user)
+        return closeWithMessage(socket, "user not found");
+    
     sockets.set(payload.id, {
       socket: socket,
       coords: defaultCoord,
-      color: defaultColor,
+      color: user.color,
     });
 
     socket.on("message", async (bytes) => {

@@ -4,6 +4,8 @@ import bodyParser from "body-parser";
 import { connectMongo } from "./mongo";
 import { register } from "./handlers/register";
 import { login } from "./handlers/login";
+import { info } from "./handlers/info";
+import { color } from "./handlers/color";
 import websocket from "./handlers/socket";
 
 function collisionFunc(p1_X: number, p1_Y: number, p2_X: number, p2_Y: number) {
@@ -22,6 +24,9 @@ const main = async () => {
 
   app.post("/register", register);
   app.post("/login", login);
+
+  app.get("/info", info);
+  app.post("/color", color);
 
   app.listen(3000, () => console.log("server started"));
 
