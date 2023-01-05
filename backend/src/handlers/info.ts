@@ -16,7 +16,7 @@ export const info: RequestHandler = async (req, res) => {
         return res.json({ success: false });
     }
 
-  const user = await User.UserModel.findOne({ _id: payload.id }, { password: 0, _id: 0}).exec();
+  const user = await User.UserModel.findOne({ _id: payload.id }, { password: 0, _id: 0 }).exec();
 
   if (user) {
     res.json({ success: true, user});

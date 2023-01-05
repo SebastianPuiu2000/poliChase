@@ -12,8 +12,8 @@ export const getToken = (url: string | undefined): string | null => {
   return token.toString();
 };
 
-export const sign = (id: any, name: string, email: string) => {
-  return jwt.sign({ id: id, name: name, email: email }, jwtSecret, {
+export const sign = (id: any, name: string) => {
+  return jwt.sign({ id: id, name: name }, jwtSecret, {
     expiresIn: tokenExpirationInSeconds,
   });
 };

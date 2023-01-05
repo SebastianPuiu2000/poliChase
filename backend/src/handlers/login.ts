@@ -9,15 +9,14 @@ export const login: RequestHandler = async (req, res) => {
   const user = await User.UserModel.findOne({ name: record["name"] }).exec();
 
   if (user) {
-    bcrypt.compare(record["password"], user.password, (_, result) => {
-      if (result) {
-        const token = sign(user["_id"], user["name"], user["email"]);
+    const result = await bcrypt.compare(record["password"], user.password);
+    if (result) {
+      const token = sign(user["_id"], user["name"]);
 
-        res.json({ success: true, token });
-      } else {
-        res.json({ success: false });
-      }
-    });
+      res.json({ success: true, token });
+    } else {
+      res.json({ success: false });
+    }
   } else {
     res.json({ success: false });
   }

@@ -2,7 +2,6 @@ import { JwtPayload } from "jsonwebtoken";
 import { WebSocketServer, WebSocket } from "ws";
 import { getToken, verify } from "../jwt";
 import User from "../models/user";
-import { FilterQuery } from "mongoose";
 
 interface Coord {
   lat: number;
@@ -13,8 +12,6 @@ const defaultCoord: Coord = {
   lat: 0.0,
   lon: 0.0
 }
-
-const defaultColor = "green";
 
 interface Player {
   socket: WebSocket;
@@ -36,6 +33,8 @@ const listen = (socketPort: number) => {
         color: value[1].color
       }))
 
+    console.log(`sockets: ${sockets.size}\tactive: ${players.length}`)
+
     const message = "active " + JSON.stringify(players);
 
     for (const s of sockets.values()) {
@@ -46,7 +45,8 @@ const listen = (socketPort: number) => {
   wss.on("connection", async function connection(socket, req) {
     const token = getToken(req.url);
 
-    if (!token) return closeWithMessage(socket, "unauthorized");
+    if (!token)
+      return closeWithMessage(socket, "unauthorized");
 
     let payload: JwtPayload;
     try {
@@ -55,13 +55,14 @@ const listen = (socketPort: number) => {
       return closeWithMessage(socket, "unauthorized");
     }
 
-    if (sockets.has(payload.id)) return closeWithMessage(socket, "unauthorized");
+    if (sockets.has(payload.id))
+      return closeWithMessage(socket, "unauthorized");
 
     const user = await User.UserModel.findOne({ _id: payload.id }).exec();
 
-    if(!user)
-        return closeWithMessage(socket, "user not found");
-    
+    if (!user)
+      return closeWithMessage(socket, "user not found");
+
     sockets.set(payload.id, {
       socket: socket,
       coords: defaultCoord,
@@ -70,8 +71,6 @@ const listen = (socketPort: number) => {
 
     socket.on("message", async (bytes) => {
       const msg = bytes.toString().split(" ");
-
-      console.log(msg[0]);
 
       if (msg[0] === "move") {
         const player = sockets.get(payload.id);

@@ -52,23 +52,15 @@ const createUser = async (
   score: number,
   color: string
 ) => {
-  const saltRounds = 10;
-  return new Promise(resolve => {
-    bcrypt.genSalt(saltRounds, (_, salt) => {
-      bcrypt.hash(password, salt, (_, hash) => {
-        UserModel.create({
-          name: name,
-          email: email,
-          password: hash,
-          score: score,
-          color: color
-        }).then(resolve);
-      });
-    });
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+  return UserModel.create({
+    name: name,
+    email: email,
+    password: hash,
+    score: score,
+    color: color
   });
 };
-
-exports.UserSchema = UserSchema;
-exports.UserModel = UserModel;
 
 export default { UserModel, methods: { createUser } };
