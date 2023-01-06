@@ -1,19 +1,59 @@
-<div class="row">
-  <div class="col-xs-5">
-    <form>
-      <label for="username">Username:</label>
-      <input
-        type="text"
-        id="username"
-        class="form-control">
-      <br>
-      <label for="password">Password: </label>
-      <input
-        type="password"
-        id="password"
-        class="form-control">
-      <br>
-      <button type="submit">Login</button>
-    </form>
+<div class="row h-100">
+
+  <div class="col-8 text-center h-50">
+    <br><br><br><br><br><br><br><br><br>
+    <h1 style="font-size: 50px">Login to your account</h1>
+    <br>
+
+    <div class="col-6 offset-3">
+      <form>
+        <div class="form-floating">
+          <input
+            type="email"
+            id="email"
+            class="form-control rounded-pill"
+            placeholder="Place email here">
+          <label
+            for="email"
+            class="form-label rounded-pill">
+            Email
+          </label>
+        </div>
+        <br>
+        <div class="form-floating">
+          <input
+            type="password"
+            id="password"
+            class="form-control rounded-pill"
+            placeholder="Place password here">
+          <label
+            for="password"
+            class="form-label rounded-pill">
+            Password
+          </label>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-4 offset-4">
+      <button
+        class="btn w-100 rounded-pill"
+        style="color: white; background-color: #2abf52">
+        Sign in
+      </button>
+    </div>
+  </div>
+
+  <div class="col-4 text-center h-100" style="background-color: #2abf52">
+    <br><br><br><br><br><br><br><br><br><br><br>
+    <h1 class="text-light" style="font-size: 50px">New here?</h1>
+    <br>
+    <h3 class="text-light">Sign up and have fun!</h3>
+    <br>
+    <button
+      class="btn w-75 rounded-pill"
+      style="color: black; background-color: white">
+      Sign up
+    </button>
   </div>
 </div>
