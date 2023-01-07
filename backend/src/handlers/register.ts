@@ -26,7 +26,9 @@ export const register: RequestHandler = async (req, res) => {
     if (user) {
       return res.json({ success: true });
     }
-  } catch {}
+  } catch(e) {
+    console.log(e);
+  }
 
   res.json({ success: false });
 };
