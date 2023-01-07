@@ -1,5 +1,8 @@
-import { Component } from "@angular/core";
+import { Component, ElementRef, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
+import { HttpClient } from "@angular/common/http";
+import { BaseResponse } from "../../shared/base-response.model";
+import { BACKEND_URL } from "../../shared/constants";
 
 @Component({
   selector: 'app-login',
@@ -7,18 +10,33 @@ import { Router } from "@angular/router";
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
+  @ViewChild('usernameInput', {static: false}) usernameInputRef: ElementRef;
+  @ViewChild('passwordInput', {static: false}) passwordInputRef: ElementRef;
 
-  constructor(private router: Router) {
-  }
+  loginSuccess = true;
 
-  onSignUpClick(): void {
-    this.router.navigateByUrl('/register');
+  constructor(private router: Router, private http: HttpClient) {
   }
 
   onSignInClick(): void {
-    // verificare daca e ok si daca da =>
-    this.router.navigateByUrl('/map');
+    const data = {
+      name: this.usernameInputRef.nativeElement.value,
+      password: this.passwordInputRef.nativeElement.value
+    };
 
-    // altfel => alerta/banner ca nu e buna combinatia
+    this.http.post<BaseResponse>(BACKEND_URL + '/login', data)
+        .subscribe(response => this.handleLogin(response));
   }
+
+  private handleLogin(response: BaseResponse): void {
+    console.log(response);
+    if (!response.success) {
+      this.loginSuccess = false;
+      return;
+    }
+
+    // websocket init
+    this.router.navigateByUrl('/map');
+  }
+
 }

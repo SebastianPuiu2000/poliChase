@@ -9,26 +9,42 @@
       <form>
         <div class="form-floating">
           <input
-                  type="email"
-                  id="email"
-                  class="form-control rounded-pill"
-                  placeholder="Place email here">
+            type="email"
+            id="username"
+            class="form-control rounded-pill"
+            placeholder="Place username here"
+            #usernameInput>
           <label
-                  for="email"
-                  class="form-label rounded-pill">
+            for="username"
+            class="form-label rounded-pill">
+            Username
+          </label>
+        </div>
+        <br>
+        <div class="form-floating">
+          <input
+            type="email"
+            id="email"
+            class="form-control rounded-pill"
+            placeholder="Place email here"
+            #emailInput>
+          <label
+            for="email"
+            class="form-label rounded-pill">
             Email
           </label>
         </div>
         <br>
         <div class="form-floating">
           <input
-                  type="password"
-                  id="password"
-                  class="form-control rounded-pill"
-                  placeholder="Place password here">
+            type="password"
+            id="password"
+            class="form-control rounded-pill"
+            placeholder="Place password here"
+            #passwordInput>
           <label
-                  for="password"
-                  class="form-label rounded-pill">
+            for="password"
+            class="form-label rounded-pill">
             Password
           </label>
         </div>
@@ -47,8 +63,15 @@
 
   <div class="col-4 text-center h-100" style="background-color: #2abf52">
     <br><br><br><br><br><br><br><br><br><br><br>
-    <h1 class="text-light" style="font-size: 50px">poliChase</h1>
+    <h1 class="text-light" style="font-size: 50px">Already have an account?</h1>
     <br>
-    <h3 class="text-light">Your adventure is about to begin!</h3>
+    <h3 class="text-light">Sign in and have fun!</h3>
+    <br>
+    <button
+      class="btn w-75 rounded-pill"
+      style="color: black; background-color: white"
+      [routerLink]="'/login'">
+      Sign in
+    </button>
   </div>
 </div>
