@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
+import { WebsocketConnection } from "../../../shared/websocket-connection";
 
 @Component({
     selector: 'app-navbar',
@@ -13,5 +14,7 @@ export class NavbarComponent {
 
     onSignOutClick(): void {
         this.router.navigateByUrl('/login');
+        WebsocketConnection.disconnect();
     }
+    
 }

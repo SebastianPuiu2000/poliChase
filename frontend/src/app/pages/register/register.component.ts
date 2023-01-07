@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
-import { BaseResponse } from "../../shared/base-response.model";
+import { BaseResponse } from "../../shared/responses/base-response.model";
 import { BACKEND_URL } from "../../shared/constants";
 
 @Component({

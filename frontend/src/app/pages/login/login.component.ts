@@ -1,8 +1,9 @@
 import { Component, ElementRef, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
-import { BaseResponse } from "../../shared/base-response.model";
+import { LoginResponse } from "../../shared/responses/login-response.model";
 import { BACKEND_URL } from "../../shared/constants";
+import { WebsocketConnection } from "../../shared/websocket-connection";
 
 @Component({
   selector: 'app-login',
@@ -24,19 +25,20 @@ export class LoginComponent {
       password: this.passwordInputRef.nativeElement.value
     };
 
-    this.http.post<BaseResponse>(BACKEND_URL + '/login', data)
+    this.http.post<LoginResponse>(BACKEND_URL + '/login', data)
         .subscribe(response => this.handleLogin(response));
   }
 
-  private handleLogin(response: BaseResponse): void {
-    console.log(response);
+  private handleLogin(response: LoginResponse): void {
     if (!response.success) {
       this.loginSuccess = false;
       return;
     }
 
-    // websocket init
+    WebsocketConnection.initialize(response.token);
+
     this.router.navigateByUrl('/map');
+    this.loginSuccess = true;
   }
 
 }
