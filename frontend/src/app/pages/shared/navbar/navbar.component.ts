@@ -16,5 +16,5 @@ export class NavbarComponent {
         this.router.navigateByUrl('/login');
         WebsocketConnection.disconnect();
     }
-    
+
 }

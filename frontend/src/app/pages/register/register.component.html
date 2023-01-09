@@ -1,7 +1,15 @@
 <div class="row h-100">
 
   <div class="col-8 text-center h-50">
-    <br><br><br><br><br><br><br><br><br>
+    <div
+      class="alert alert-danger"
+      role="alert"
+      *ngIf="!registerSuccess">
+      {{ registerErrorMessage }}
+    </div>
+    <br *ngIf="registerSuccess"><br *ngIf="registerSuccess"><br *ngIf="registerSuccess">
+
+    <br><br><br><br><br>
     <h1 style="font-size: 50px">Create your new account</h1>
     <br>
 

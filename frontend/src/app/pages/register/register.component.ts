@@ -37,7 +37,7 @@ export class RegisterComponent {
   }
 
   private validateFields(data: any): boolean {
-    if (data.name.len < 5 || data.email.len < 5 || data.password.len < 5) {
+    if (data.name.length < 5 || data.email.length < 5 || data.password.length < 5) {
       this.registerSuccess = false;
       this.registerErrorMessage = "All fields must have minimum 5 characters!";
       return false;
@@ -49,7 +49,7 @@ export class RegisterComponent {
     console.log(response);
     if (!response.success) {
       this.registerSuccess = false;
-      this.registerErrorMessage = 'Bad credentials';
+      this.registerErrorMessage = 'Username already taken!';
       return;
     }
 
