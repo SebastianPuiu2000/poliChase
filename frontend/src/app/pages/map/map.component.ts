@@ -59,7 +59,19 @@ export class MapComponent implements OnInit, OnDestroy {
       setDefaultOptions({ css: true });
 
       // Load the modules for the ArcGIS API for JavaScript
-      const [esriConfig, Map, MapView, FeatureLayer, Graphic, Point, GraphicsLayer, route, locator, RouteParameters, FeatureSet] = await loadModules([
+      const [esriConfig,
+        Map,
+        MapView,
+        FeatureLayer,
+        Graphic,
+        Point,
+        GraphicsLayer,
+        route,
+        locator,
+        RouteParameters,
+        FeatureSet,
+        Locate
+      ] = await loadModules([
         "esri/config",
         "esri/Map",
         "esri/views/MapView",
@@ -70,7 +82,8 @@ export class MapComponent implements OnInit, OnDestroy {
         "esri/rest/route",
         "esri/rest/locator",
         "esri/rest/support/RouteParameters",
-        "esri/rest/support/FeatureSet"
+        "esri/rest/support/FeatureSet",
+        "esri/widgets/Locate"
       ]);
 
       esriConfig.apiKey = "AAPK46bb416835724250a82b5955f095e09blM-sJFMyEUHbmgp2WHVfrYIwY3LK7vKyx8JPanN_2lsCUSdlHwUUsRMLsSF-KZN7";
@@ -107,6 +120,16 @@ export class MapComponent implements OnInit, OnDestroy {
 
       await this.view.when(); // wait for map to load
       console.log("ArcGIS map loaded");
+
+      const locate = new Locate({
+        view: this.view,
+        useHeadingEnabled: false,
+        goToOverride: function(view, options) {
+          options.target.scale = 1500;
+          return view.goTo(options.target);
+        }
+      });
+      this.view.ui.add(locate, "top-left");
 
       return this.view;
     } catch (error) {
