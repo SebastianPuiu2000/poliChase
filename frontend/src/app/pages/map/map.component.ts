@@ -141,6 +141,9 @@ export class MapComponent implements OnInit, OnDestroy {
       this.loaded = this.view.ready;
       this.mapLoadedEvent.emit(true);
 
+      this.graphicsLayer = new this._GraphicsLayer();
+      this.map.add(this.graphicsLayer);
+
       // this is for user to give location permissions
       await new Promise(resolve => {
         navigator.geolocation.getCurrentPosition(() => resolve(null))
@@ -155,8 +158,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
       // update map with active players
       WebsocketConnection.setActivePlayersHandler(players => {
-        this.map.remove(this.graphicsLayer);
-        this.graphicsLayer = new this._GraphicsLayer();
+        this.graphicsLayer.removeAll();
 
         players.forEach(player => {
           const point = {
@@ -181,8 +183,6 @@ export class MapComponent implements OnInit, OnDestroy {
 
           this.graphicsLayer.add(this.pointGraphic);
         });
-
-        this.map.add(this.graphicsLayer);
       })
     });
   }
