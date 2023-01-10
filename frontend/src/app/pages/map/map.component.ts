@@ -10,7 +10,6 @@ import {
 } from "@angular/core";
 import { setDefaultOptions, loadModules } from 'esri-loader';
 import esri = __esri;
-import { Player } from "../../shared/player.model";
 import { WebsocketConnection } from "../../shared/websocket-connection";
 
 @Component({
@@ -47,7 +46,7 @@ export class MapComponent implements OnInit, OnDestroy {
   center: Array<number> = [26.049249, 44.439862];
   basemap = "streets-vector";
   loaded = false;
-  timeoutHandler = null;
+  interval = null;
 
   constructor() { }
 
@@ -134,57 +133,57 @@ export class MapComponent implements OnInit, OnDestroy {
     }
   }
 
-  runTimer() {
-    this.timeoutHandler = setTimeout(() => {
-      // code to execute continuously until the view is closed
-      this.updatePlayerPositions();
-      this.runTimer();
-    }, 500);
-  }
-
-  stopTimer() {
-    if (this.timeoutHandler != null) {
-      clearTimeout(this.timeoutHandler);
-      this.timeoutHandler = null;
-    }
-  }
-
-  updatePlayerPositions(): void {
-    this.map.remove(this.graphicsLayer);
-    this.graphicsLayer = new this._GraphicsLayer();
-    this.map.add(this.graphicsLayer);
-
-    const players: Player[] = WebsocketConnection.getConnectedPlayers();
-    players.forEach(player => {
-      const point = {
-        type: "point",
-        longitude: player.lon,
-        latitude: player.lat
-      };
-      const simpleMarkerSymbol = {
-        type: "simple-marker",
-        color: [0, 255, 0],  // Orange
-        outline: {
-          color: [255, 255, 255], // White
-          width: 1
-        }
-      };
-      this.pointGraphic = new this._Graphic({
-        geometry: point,
-        symbol: simpleMarkerSymbol
-      });
-      this.graphicsLayer.add(this.pointGraphic);
-    });
-  }
-
   ngOnInit() {
     // Initialize MapView and return an instance of MapView
-    this.initializeMap().then(() => {
+    this.initializeMap().then(async () => {
       // The map has been initialized
       console.log("mapView ready: ", this.view.ready);
       this.loaded = this.view.ready;
       this.mapLoadedEvent.emit(true);
-      this.runTimer();
+
+      // this is for user to give location permissions
+      await new Promise(resolve => {
+        navigator.geolocation.getCurrentPosition(() => resolve(null))
+      })
+
+      // send location to backend
+      this.interval = setInterval(() => {
+        navigator.geolocation.getCurrentPosition(res => {
+          WebsocketConnection.sendLocation(res.coords.latitude, res.coords.longitude);
+        });
+      }, 500);
+
+      // update map with active players
+      WebsocketConnection.setActivePlayersHandler(players => {
+        this.map.remove(this.graphicsLayer);
+        this.graphicsLayer = new this._GraphicsLayer();
+
+        players.forEach(player => {
+          const point = {
+            type: "point",
+            longitude: player.lon,
+            latitude: player.lat
+          };
+
+          const simpleMarkerSymbol = {
+            type: "simple-marker",
+            color: [0, 255, 0],  // Orange
+            outline: {
+              color: [255, 255, 255], // White
+              width: 1
+            }
+          };
+
+          this.pointGraphic = new this._Graphic({
+            geometry: point,
+            symbol: simpleMarkerSymbol
+          });
+
+          this.graphicsLayer.add(this.pointGraphic);
+        });
+
+        this.map.add(this.graphicsLayer);
+      })
     });
   }
 
@@ -192,8 +191,9 @@ export class MapComponent implements OnInit, OnDestroy {
     if (this.view) {
       // destroy the map view
       this.view.container = null;
+      if (this.interval) {
+        clearInterval(this.interval);
+      }
     }
-    this.stopTimer();
   }
-
 }
