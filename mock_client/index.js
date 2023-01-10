@@ -82,7 +82,7 @@ const client = async (i) => {
     }
   });
 
-  let pos = [44.2621, 26.0257];
+  let pos = [44.439862, 26.049249];
   let dir = [(Math.random() - 0.5) / 10000, (Math.random() - 0.5) / 10000];
   setInterval(() => {
     pos[0] += dir[0];
