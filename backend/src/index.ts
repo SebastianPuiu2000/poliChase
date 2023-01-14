@@ -6,6 +6,8 @@ import { register } from "./handlers/register";
 import { login } from "./handlers/login";
 import { info } from "./handlers/info";
 import { color } from "./handlers/color";
+import { infobuild } from "./handlers/infobuild";
+import { addBuildings, build } from "./build";
 import websocket from "./handlers/socket";
 
 function collisionFunc(p1_X: number, p1_Y: number, p2_X: number, p2_Y: number) {
@@ -20,10 +22,15 @@ const main = async () => {
 
   const app = express();
 
+  addBuildings();
+
   app.use(bodyParser.json());
   app.use((_, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    );
     next();
   });
 
@@ -32,6 +39,9 @@ const main = async () => {
 
   app.get("/info", info);
   app.post("/color", color);
+
+  app.post("/build", build);
+  app.get("/infobuild", infobuild);
 
   app.listen(3000, () => console.log("server started"));
 
