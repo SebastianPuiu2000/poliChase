@@ -133,6 +133,48 @@ export class MapComponent implements OnInit, OnDestroy {
     }
   }
 
+  createMarker(color: string) {
+    let c = [128, 128, 128];
+    switch(color) {
+      case 'bomb':
+        c = [0, 0, 0];
+        break;
+      case 'green':
+        c = [27, 219, 32];
+        break;
+      case 'red':
+        c = [224, 19, 45];
+        break;
+      case 'blue':
+        c = [10, 41, 210];
+        break;
+      case 'white':
+        c = [220, 220, 240];
+        break;
+      case 'yellow':
+        c = [195, 201, 10];
+        break;
+      case 'purple':
+        c = [180, 7, 230];
+        break;
+      case 'orange':
+        c = [230, 132, 20];
+        break;
+      case 'cyan':
+        c = [12, 160, 203];
+        break;
+    }
+
+    return {
+      type: "simple-marker",
+      color: c,
+      outline: {
+        color: [255, 255, 255],
+        width: 0.5
+      }
+    }
+  }
+
   ngOnInit() {
     // Initialize MapView and return an instance of MapView
     this.initializeMap().then(async () => {
@@ -167,18 +209,9 @@ export class MapComponent implements OnInit, OnDestroy {
             latitude: player.lat
           };
 
-          const simpleMarkerSymbol = {
-            type: "simple-marker",
-            color: [0, 255, 0],  // Orange
-            outline: {
-              color: [255, 255, 255], // White
-              width: 1
-            }
-          };
-
           this.pointGraphic = new this._Graphic({
             geometry: point,
-            symbol: simpleMarkerSymbol
+            symbol: this.createMarker(player.color)
           });
 
           this.graphicsLayer.add(this.pointGraphic);

@@ -7,22 +7,12 @@ import { login } from "./handlers/login";
 import { info } from "./handlers/info";
 import { color } from "./handlers/color";
 import { infobuild } from "./handlers/infobuild";
-import { addBuildings } from "./build";
 import websocket from "./handlers/socket";
-
-function collisionFunc(p1_X: number, p1_Y: number, p2_X: number, p2_Y: number) {
-  let r = 2.0;
-
-  if ((r + r) ** 2 > (p1_X - p2_X) ** 2 + (p1_Y - p2_Y) ** 2) return true;
-  else return false;
-}
 
 const main = async () => {
   await connectMongo();
 
   const app = express();
-
-  // addBuildings();
 
   app.use(bodyParser.json());
   app.use((_, res, next) => {
@@ -40,7 +30,7 @@ const main = async () => {
   app.get("/info", info);
   app.post("/color", color);
 
-  app.get("/infobuild", infobuild);
+  app.get("/buildings", infobuild);
 
   app.listen(3000, () => console.log("server started"));
 

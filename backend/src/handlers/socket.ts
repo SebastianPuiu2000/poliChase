@@ -2,6 +2,7 @@ import { JwtPayload } from "jsonwebtoken";
 import { WebSocketServer, WebSocket } from "ws";
 import { getToken, verify } from "../jwt";
 import User from "../models/user";
+import { circleCircle } from "../collision";
 
 interface Coord {
   lat: number;
@@ -17,12 +18,14 @@ interface Player {
   socket: WebSocket;
   coords: Coord;
   color: string;
+  cooldown: EpochTimeStamp;
 }
 
 const listen = (socketPort: number) => {
   const wss = new WebSocketServer({ port: socketPort });
 
   let sockets = new Map<string, Player>();
+  let currentBomb: null | string = null;
 
   setInterval(() => {
     const players = Array.from(sockets)
@@ -30,17 +33,60 @@ const listen = (socketPort: number) => {
       .map(value => ({
         lat: value[1].coords.lat,
         lon: value[1].coords.lon,
-        color: value[1].color
+        color: currentBomb === value[0] ? "bomb" : value[1].color
       }))
 
     console.log(`sockets: ${sockets.size}\tactive: ${players.length}`)
+    console.log(`bomb: ${currentBomb}`)
 
     const message = "active " + JSON.stringify(players);
 
     for (const s of sockets.values()) {
       s.socket.send(message);
     }
+
+    if (!currentBomb) return;
+
+    const bombPlayer = sockets.get(currentBomb);
+    if (!bombPlayer) {
+      currentBomb = null;
+      return;
+    }
+
+    const now = Date.now();
+    for (const other of sockets.entries()) {
+      if (
+        other[0] != currentBomb &&
+        circleCircle(
+          bombPlayer.coords.lat,
+          bombPlayer.coords.lon,
+          other[1].coords.lat,
+          other[1].coords.lon,
+          0.0001
+        ) && other[1].cooldown < now
+      ) {
+        console.log("COLISION!");
+        bombPlayer.cooldown = now + 2_000;
+        currentBomb = other[0];
+        break;
+      }
+    }
+
   }, 500);
+
+  setInterval(() => {
+    const keys = Array.from(sockets.keys());
+    if (keys.length < 2)
+      return;
+
+    if (currentBomb) return;
+
+    currentBomb = keys[Math.floor(Math.random() * keys.length)]
+
+    /* setTimeout(() => { */
+    /*   currentBomb = null; */
+    /* }, 54_000) */
+  }, 6_000)
 
   wss.on("connection", async function connection(socket, req) {
     const token = getToken(req.url);
@@ -67,6 +113,7 @@ const listen = (socketPort: number) => {
       socket: socket,
       coords: defaultCoord,
       color: user.color,
+      cooldown: 0
     });
 
     socket.on("message", async (bytes) => {
