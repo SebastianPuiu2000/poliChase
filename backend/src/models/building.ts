@@ -4,6 +4,7 @@ import { model } from "mongoose";
 
 export interface IBuilding {
   name: string;
+  color: Array<number>;
   points: Array<[number, number]>;
 }
 
@@ -16,6 +17,10 @@ const BuildingSchema = new Schema({
     required: true,
     unique: true,
   },
+  color: {
+    type: [Number],
+    required: true,
+  },
   points: {
     type: [[Number]],
     required: true,
@@ -26,10 +31,12 @@ const BuildingModel = model<IBuildingDocument>("building", BuildingSchema);
 
 const createBuilding = async (
   name: string,
+  color: Array<number>,
   points: Array<[number, number]>
 ) => {
   return BuildingModel.create({
     name: name,
+    color: color,
     points: points,
   });
 };

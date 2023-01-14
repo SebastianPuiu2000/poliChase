@@ -3,7 +3,7 @@ import Building from "../models/building";
 
 export const infobuild: RequestHandler = async (_, res) => {
   const buildings = (await Building.BuildingModel.find({}).exec()).map(
-    build => ({ name: build.name, points: build.points })
+    build => ({ name: build.name, color: build.color, points: build.points })
   );
 
   if (buildings) {
