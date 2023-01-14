@@ -7,15 +7,13 @@ let locations: Array<[string, Array<number>, Array<[number, number]>]> = [];
 const colorE = [255, 244, 131];
 const colorF = [210, 201, 110];
 const colorR = [255, 251, 207]; // rectorat
-const colorS = [0,   150, 65]; // sala de sport
+const colorS = [0, 150, 65]; // sala de sport
 const colorJ = [165, 145, 188];
 const colorC = [190, 191, 190];
 const colorP = [245, 163, 108];
-const colorD = [87,  111, 105];
+const colorD = [87, 111, 105];
 const colorA = [210, 112, 108]; // aula
-const colorB = [176, 66,  57]; // biblioteca
-
-
+const colorB = [176, 66, 57]; // biblioteca
 
 location = [
   "JK",
