@@ -136,6 +136,6 @@ const interactive_mock = async (proto) => {
 
 const count = process.argv[2] || 1;
 const time = process.argv[3] || 1;
-const proto = process.env[4] || 'http';
+const proto = process.argv[4] || 'http';
 spawn(count - 1, time, proto);
 interactive_mock(proto)
