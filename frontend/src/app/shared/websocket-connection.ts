@@ -9,8 +9,6 @@ export class WebsocketConnection {
   }
 
   static initialize(token: string): void {
-    console.log("UITE!!!!!!");
-    console.log(WEBSOCK_URL);
     this.connection = new WebSocket(WEBSOCK_URL + `?token=${token}`);
     this.connection.onmessage = ({ data }) => {
       const msg = data.toString().split(' ');
@@ -19,8 +17,6 @@ export class WebsocketConnection {
         this.handler(players);
       }
     }
-
-    console.log("DONE!");
   }
 
   static setActivePlayersHandler(f: (players: Player[]) => void) {
