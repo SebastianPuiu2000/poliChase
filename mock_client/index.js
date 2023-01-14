@@ -1,13 +1,8 @@
 const fs = require('fs');
-const https = require('http');
 const { WebSocket } = require('ws');
 const randomName = require('random-name');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
-const agent = new https.Agent({
-  rejectUnauthorized: false,
-});
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -24,7 +19,12 @@ const headers = {
 };
 const colors = ['green', 'red', 'white', 'blue', 'yellow', 'purple', 'cyan', 'orange'];
 
-const client = async (interactive, debug) => {
+const client = async (interactive, debug, proto) => {
+  let secured = '';
+  if (proto === 'https') {
+    secured = 's';
+  }
+
   const name = randomName();
 
   const username = name.toLowerCase().replace(' ', '.');
@@ -32,10 +32,9 @@ const client = async (interactive, debug) => {
   const email = username + '@gmail.com';
   const color = colors[getRandomInt(colors.length)];
 
-  let res = await fetch(`https://${host}:3000/register`, {
+  let res = await fetch(`http${secured}://${host}:3000/register`, {
     method: 'POST',
     headers,
-    agent,
     body: JSON.stringify({
       name: username,
       email: email,
@@ -48,10 +47,9 @@ const client = async (interactive, debug) => {
     return;
   }
 
-  res = await fetch(`https://${host}:3000/login`, {
+  res = await fetch(`http${secured}://${host}:3000/login`, {
     method: 'POST',
     headers,
-    agent,
     body: JSON.stringify({
       name: username,
       password: password
@@ -65,10 +63,9 @@ const client = async (interactive, debug) => {
 
   let token = body.token;
 
-  res = await fetch(`https://${host}:3000/color?token=${token}`, {
+  res = await fetch(`http${secured}://${host}:3000/color?token=${token}`, {
     method: 'POST',
     headers,
-    agent,
     body: JSON.stringify({
       color,
     })
@@ -79,7 +76,7 @@ const client = async (interactive, debug) => {
     return;
   }
 
-  const ws = new WebSocket(`wss://${host}:3000?token=${token}`, { rejectUnauthorized: false });
+  const ws = new WebSocket(`ws${secured}://${host}:3000?token=${token}`, { rejectUnauthorized: false });
   ws.on('message', msg => {
     if (debug) {
       console.log(msg.toString());
@@ -101,20 +98,20 @@ const client = async (interactive, debug) => {
   }
 }
 
-const spawn = async (count, time) => {
+const spawn = async (count, time, proto) => {
   for (let i = 0; i < count; i++) {
-    await client(false, false).catch(console.warn);
+    await client(false, false, proto).catch(console.warn);
     await delay(time);
   }
 }
 
-const interactive_mock = async () => {
+const interactive_mock = async (proto) => {
   const getChar = () => new Promise(resolve => {
     let buffer = Buffer.alloc(1)
     fs.read(0, buffer, 0, 1, null, () => resolve(buffer.toString('utf8')))
   })
 
-  const pos = await client(true, false);
+  const pos = await client(true, false, proto);
   const speed = 0.0001;
   while (true) {
     const c = await getChar();
@@ -138,5 +135,7 @@ const interactive_mock = async () => {
 }
 
 const count = process.argv[2] || 1;
-spawn(count - 1, process.argv[3] || 1);
-interactive_mock()
+const time = process.argv[3] || 1;
+const proto = process.env[4] || 'http';
+spawn(count - 1, time, proto);
+interactive_mock(proto)

@@ -1,7 +1,9 @@
 import express from "express";
 import bodyParser from "body-parser";
 import https from 'https';
+import http from 'http';
 import selfsigned from 'selfsigned';
+import cors from 'cors';
 
 import { connectMongo } from "./mongo";
 import { register } from "./handlers/register";
@@ -11,10 +13,14 @@ import { color } from "./handlers/color";
 import { infobuild } from "./handlers/infobuild";
 import websocket from "./handlers/socket";
 
-const getCredentials = () => {
+const getSecuredServer = () => {
   const attrs = [{ name: 'commonName', value: process.env.HOST || 'localhost:3000' }];
   const keys = selfsigned.generate(attrs, { days: 365 });
-  return { key: keys.private, cert: keys.cert };
+  return https.createServer({ key: keys.private, cert: keys.cert });
+}
+
+const getServer = () => {
+  return http.createServer();
 }
 
 const main = async () => {
@@ -23,14 +29,7 @@ const main = async () => {
   const app = express();
 
   app.use(bodyParser.json());
-  app.use((_, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header(
-      "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept"
-    );
-    next();
-  });
+  app.use(cors());
 
   app.post("/register", register);
   app.post("/login", login);
@@ -40,7 +39,7 @@ const main = async () => {
 
   app.get("/buildings", infobuild);
 
-  const server = https.createServer(getCredentials());
+  const server = process.env.SECURED ? getSecuredServer() : getServer();
 
   server.on('request', app);
 
