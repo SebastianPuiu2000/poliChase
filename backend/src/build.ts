@@ -3,7 +3,6 @@ import Building from "./models/building";
 let location: [string, Array<number>, Array<[number, number]>];
 let locations: Array<[string, Array<number>, Array<[number, number]>]> = [];
 
-// const color = [195, 201, 10]; // R G B
 const colorE = [255, 244, 131];
 const colorF = [210, 201, 110];
 const colorR = [255, 251, 207]; // rectorat
@@ -124,7 +123,7 @@ location = [
 locations.push(location);
 
 location = [
-  "SPORT",
+  "SALA_SPORT",
   colorS,
   [
     [44.43976, 26.05513],
