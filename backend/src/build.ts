@@ -1,5 +1,4 @@
 import Building from "./models/building";
-import Sector from "./models/sector";
 
 let location: [string, Array<[number, number]>];
 let locations: Array<[string, Array<[number, number]>]> = [];
