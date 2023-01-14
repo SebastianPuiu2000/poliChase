@@ -22,7 +22,7 @@ const main = async () => {
 
   const app = express();
 
-  addBuildings();
+  // addBuildings();
 
   app.use(bodyParser.json());
   app.use((_, res, next) => {

@@ -4,10 +4,10 @@ let location: [string, Array<[number, number]>];
 let locations: Array<[string, Array<[number, number]>]> = [];
 
 location = [
-  "Electrica1",
+  "Electrica",
   [
-    [44.4369, 26.04566],
-    [44.4369, 26.04593],
+    [44.43690, 26.04566],
+    [44.43690, 26.04593],
     [44.43588, 26.04597],
     [44.43587, 26.04571],
   ],
@@ -16,11 +16,11 @@ location = [
 locations.push(location);
 
 location = [
-  "Automatica1",
+  "Automatica",
   [
     [44.43603, 26.04711],
     [44.43604, 26.04763],
-    [44.4356, 26.04764],
+    [44.43560, 26.04764],
     [44.43559, 26.04712],
   ],
 ];
@@ -28,11 +28,11 @@ location = [
 locations.push(location);
 
 location = [
-  "Energetica1",
+  "Energetica",
   [
     [44.43778, 26.04859],
-    [44.43769, 26.0491],
-    [44.43741, 26.049],
+    [44.43769, 26.04910],
+    [44.43741, 26.04900],
     [44.43751, 26.04848],
   ],
 ];
@@ -40,9 +40,9 @@ location = [
 locations.push(location);
 
 location = [
-  "Biblioteca1",
+  "Biblioteca",
   [
-    [44.4414, 26.05084],
+    [44.44140, 26.05084],
     [44.44124, 26.05175],
     [44.44091, 26.05165],
     [44.44107, 26.05072],
@@ -52,19 +52,19 @@ location = [
 locations.push(location);
 
 location = [
-  "Robotica1",
+  "Robotica",
   [
     [44.44131, 26.04897],
-    [44.4412, 26.04959],
+    [44.44120, 26.04959],
     [44.44073, 26.04942],
-    [44.44084, 26.0488],
+    [44.44084, 26.04880],
   ],
 ];
 
 locations.push(location);
 
 location = [
-  "Biotehnica1",
+  "Biotehnica",
   [
     [44.44013, 26.04537],
     [44.43995, 26.04633],
@@ -76,19 +76,19 @@ location = [
 locations.push(location);
 
 location = [
-  "Transporturi1",
+  "Transporturi",
   [
     [44.43991, 26.05256],
     [44.43984, 26.05293],
     [44.43952, 26.05282],
-    [44.4396, 26.05244],
+    [44.43960, 26.05244],
   ],
 ];
 
 locations.push(location);
 
 location = [
-  "Aula1",
+  "Aula",
   [
     [44.44062, 26.05168],
     [44.44056, 26.05189],
@@ -100,9 +100,9 @@ location = [
 locations.push(location);
 
 location = [
-  "Rectorat1",
+  "Rectorat",
   [
-    [44.43871, 26.0513],
+    [44.43871, 26.05130],
     [44.43861, 26.05189],
     [44.43818, 26.05173],
     [44.43829, 26.05115],
@@ -112,7 +112,7 @@ location = [
 locations.push(location);
 
 location = [
-  "Stiinte1",
+  "Stiinte",
   [
     [44.44012, 26.05033],
     [44.44002, 26.05087],
@@ -124,12 +124,12 @@ location = [
 locations.push(location);
 
 location = [
-  "Sportiv1",
+  "Sportiv",
   [
     [44.43971, 26.05511],
     [44.43963, 26.05553],
     [44.43933, 26.05542],
-    [44.4394, 26.055],
+    [44.43940, 26.05500],
   ],
 ];
 
