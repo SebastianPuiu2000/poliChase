@@ -1,0 +1,9 @@
+version: "2"
+authtoken:  # PUT TOKEN HERE
+tunnels:
+  poliChase-frontend:
+    proto: http
+    addr: 4200
+  poliChase-backend:
+    proto: tcp
+    addr: 3000

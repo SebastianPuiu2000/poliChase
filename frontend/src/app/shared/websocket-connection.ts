@@ -1,4 +1,4 @@
-import { WEBSOCKET_URL } from "./constants";
+import { WEBSOCK_URL } from "./constants";
 import { Player } from "./player.model";
 
 export class WebsocketConnection {
@@ -9,7 +9,9 @@ export class WebsocketConnection {
   }
 
   static initialize(token: string): void {
-    this.connection = new WebSocket(WEBSOCKET_URL + `?token=${token}`);
+    console.log("UITE!!!!!!");
+    console.log(WEBSOCK_URL);
+    this.connection = new WebSocket(WEBSOCK_URL + `?token=${token}`);
     this.connection.onmessage = ({ data }) => {
       const msg = data.toString().split(' ');
       if (msg[0] === 'active') {
@@ -17,6 +19,8 @@ export class WebsocketConnection {
         this.handler(players);
       }
     }
+
+    console.log("DONE!");
   }
 
   static setActivePlayersHandler(f: (players: Player[]) => void) {

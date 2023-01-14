@@ -21,8 +21,8 @@ interface Player {
   cooldown: EpochTimeStamp;
 }
 
-const listen = (socketPort: number) => {
-  const wss = new WebSocketServer({ port: socketPort });
+const listen = (server: any) => {
+  const wss = new WebSocketServer({ server });
 
   let sockets = new Map<string, Player>();
   let currentBomb: null | string = null;

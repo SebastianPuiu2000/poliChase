@@ -15,7 +15,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@ngx-env/builder:browser",
           "options": {
             "outputPath": "dist/angular-cli-esri-map",
             "index": "src/index.html",
@@ -33,7 +33,8 @@
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"]
+              "node_modules/bootstrap/dist/js/bootstrap.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -66,9 +67,10 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@ngx-env/builder:dev-server",
           "options": {
-            "browserTarget": "angular-cli-esri-map:build"
+            "browserTarget": "angular-cli-esri-map:build",
+            "disableHostCheck": true
           },
           "configurations": {
             "production": {
@@ -77,13 +79,13 @@
           }
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@ngx-env/builder:extract-i18n",
           "options": {
             "browserTarget": "angular-cli-esri-map:build"
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@ngx-env/builder:karma",
           "options": {
             "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",

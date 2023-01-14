@@ -16,6 +16,7 @@ services:
     environment:
       MONGO: mongo
       JWT_SECRET: supersecret
+      HOST: ${POLICHASE_BACKEND}
     ports:
       - 3000:3000
       - 3001:3001
@@ -30,7 +31,8 @@ services:
       dockerfile: Dockerfile
       context: ./frontend
     environment:
-      BACKEND: backend
+      BACKEND: "https://${POLICHASE_BACKEND}"
+      WEBSOCK: "wss://${POLICHASE_BACKEND}"
     ports:
       - 4200:4200
     volumes:

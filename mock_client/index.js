@@ -1,6 +1,13 @@
-let fs = require('fs')
+const fs = require('fs');
+const https = require('http');
 const { WebSocket } = require('ws');
 const randomName = require('random-name');
+
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+const agent = new https.Agent({
+  rejectUnauthorized: false,
+});
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -25,9 +32,10 @@ const client = async (interactive, debug) => {
   const email = username + '@gmail.com';
   const color = colors[getRandomInt(colors.length)];
 
-  let res = await fetch(`http://${host}:3000/register`, {
+  let res = await fetch(`https://${host}:3000/register`, {
     method: 'POST',
     headers,
+    agent,
     body: JSON.stringify({
       name: username,
       email: email,
@@ -40,9 +48,10 @@ const client = async (interactive, debug) => {
     return;
   }
 
-  res = await fetch(`http://${host}:3000/login`, {
+  res = await fetch(`https://${host}:3000/login`, {
     method: 'POST',
     headers,
+    agent,
     body: JSON.stringify({
       name: username,
       password: password
@@ -56,9 +65,10 @@ const client = async (interactive, debug) => {
 
   let token = body.token;
 
-  res = await fetch(`http://${host}:3000/color?token=${token}`, {
+  res = await fetch(`https://${host}:3000/color?token=${token}`, {
     method: 'POST',
     headers,
+    agent,
     body: JSON.stringify({
       color,
     })
@@ -69,7 +79,7 @@ const client = async (interactive, debug) => {
     return;
   }
 
-  const ws = new WebSocket(`ws://${host}:3001?token=${token}`);
+  const ws = new WebSocket(`wss://${host}:3000?token=${token}`, { rejectUnauthorized: false });
   ws.on('message', msg => {
     if (debug) {
       console.log(msg.toString());

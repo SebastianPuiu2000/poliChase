@@ -1,5 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
+import https from 'https';
+import selfsigned from 'selfsigned';
 
 import { connectMongo } from "./mongo";
 import { register } from "./handlers/register";
@@ -8,6 +10,12 @@ import { info } from "./handlers/info";
 import { color } from "./handlers/color";
 import { infobuild } from "./handlers/infobuild";
 import websocket from "./handlers/socket";
+
+const getCredentials = () => {
+  const attrs = [{ name: 'commonName', value: process.env.HOST }];
+  const keys = selfsigned.generate(attrs, { days: 365 });
+  return { key: keys.private, cert: keys.cert };
+}
 
 const main = async () => {
   await connectMongo();
@@ -32,9 +40,13 @@ const main = async () => {
 
   app.get("/buildings", infobuild);
 
-  app.listen(3000, () => console.log("server started"));
+  const server = https.createServer(getCredentials());
 
-  websocket.listen(3001);
+  server.on('request', app);
+
+  websocket.listen(server);
+
+  server.listen(3000, () => console.log('server started'))
 };
 
 main();
