@@ -12,7 +12,7 @@ function delay(time) {
   return new Promise(resolve => setTimeout(resolve, time));
 }
 
-const host = 'localhost';
+const host = 'localhost:3000';
 const headers = {
   'Accept': 'application/json',
   'Content-Type': 'application/json'
@@ -32,7 +32,7 @@ const client = async (interactive, debug, proto) => {
   const email = username + '@gmail.com';
   const color = colors[getRandomInt(colors.length)];
 
-  let res = await fetch(`http${secured}://${host}:3000/register`, {
+  let res = await fetch(`http${secured}://${host}/register`, {
     method: 'POST',
     headers,
     body: JSON.stringify({
@@ -47,7 +47,7 @@ const client = async (interactive, debug, proto) => {
     return;
   }
 
-  res = await fetch(`http${secured}://${host}:3000/login`, {
+  res = await fetch(`http${secured}://${host}/login`, {
     method: 'POST',
     headers,
     body: JSON.stringify({
@@ -63,7 +63,7 @@ const client = async (interactive, debug, proto) => {
 
   let token = body.token;
 
-  res = await fetch(`http${secured}://${host}:3000/color?token=${token}`, {
+  res = await fetch(`http${secured}://${host}/color?token=${token}`, {
     method: 'POST',
     headers,
     body: JSON.stringify({
@@ -76,7 +76,7 @@ const client = async (interactive, debug, proto) => {
     return;
   }
 
-  const ws = new WebSocket(`ws${secured}://${host}:3000?token=${token}`, { rejectUnauthorized: false });
+  const ws = new WebSocket(`ws${secured}://${host}?token=${token}`, { rejectUnauthorized: false });
   ws.on('message', msg => {
     if (debug) {
       console.log(msg.toString());

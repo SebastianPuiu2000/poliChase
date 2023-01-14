@@ -79,14 +79,12 @@ const listen = (server: any) => {
     if (keys.length < 2)
       return;
 
-    if (currentBomb) return;
-
     currentBomb = keys[Math.floor(Math.random() * keys.length)]
 
-    /* setTimeout(() => { */
-    /*   currentBomb = null; */
-    /* }, 54_000) */
-  }, 6_000)
+    setTimeout(() => {
+      currentBomb = null;
+    }, 54_000)
+  }, 60_000)
 
   wss.on("connection", async function connection(socket, req) {
     const token = getToken(req.url);
