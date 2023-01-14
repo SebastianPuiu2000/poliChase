@@ -446,6 +446,10 @@ locations.push(location);
 
 export const addBuildings = async () => {
   for (let value of locations) {
-    Building.methods.createBuilding(value[0], value[1]);
+    const building = await Building.BuildingModel.findOne({
+      name: value[0],
+    }).exec();
+
+    if (!building) Building.methods.createBuilding(value[0], value[1]);
   }
 };
