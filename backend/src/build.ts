@@ -449,6 +449,6 @@ export const addBuildings = async () => {
       name: value[0],
     }).exec();
 
-    if (!building) Building.methods.createBuilding(value[0], value[1]);
+    if (!building) await Building.methods.createBuilding(value[0], value[1]);
   }
 };
