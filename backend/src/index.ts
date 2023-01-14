@@ -7,7 +7,7 @@ import { login } from "./handlers/login";
 import { info } from "./handlers/info";
 import { color } from "./handlers/color";
 import { infobuild } from "./handlers/infobuild";
-import { addBuildings, build } from "./build";
+import { addBuildings } from "./build";
 import websocket from "./handlers/socket";
 
 function collisionFunc(p1_X: number, p1_Y: number, p2_X: number, p2_Y: number) {
