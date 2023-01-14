@@ -1,0 +1,48 @@
+<div class="row h-100">
+
+  <div class="col-8 text-center h-50">
+    <br><br><br><br><br><br><br><br><br>
+    <h1 style="font-size: 50px">Profile</h1>
+    <br>
+
+    <div class="col-6 offset-3">
+      <form>
+        <div class="form-control">
+          <label
+            for="staticEmail"
+            class="form-label rounded-pill">
+            Email
+          </label>
+          <input type="text" readonly class="form-control-plaintext rounded-pill" id="staticEmail" value="email test">
+        </div>
+        <br>
+        <div class="form-floating">
+          <input
+            type="password"
+            id="password"
+            class="form-control rounded-pill"
+            placeholder="Place password here"
+            #passwordInput>
+          <label
+            for="password"
+            class="form-label rounded-pill">
+            Password
+          </label>
+        </div>
+      </form>
+    </div>
+
+  <div class="col-4 text-center h-100" style="background-color: #2abf52">
+    <br><br><br><br><br><br><br><br><br><br><br>
+    <h1 class="text-light" style="font-size: 50px">New here?</h1>
+    <br>
+    <h3 class="text-light">Sign up and have fun!</h3>
+    <br>
+    <button
+      class="btn w-75 rounded-pill"
+      style="color: black; background-color: white"
+      [routerLink]="'/register'">
+      Sign up
+    </button>
+  </div>
+</div>

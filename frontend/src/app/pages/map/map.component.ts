@@ -11,6 +11,9 @@ import {
 import { setDefaultOptions, loadModules } from 'esri-loader';
 import esri = __esri;
 import { WebsocketConnection } from "../../shared/websocket-connection";
+import {HttpRequests} from "../../shared/http-requests";
+import {BuildingsResponse} from "../../shared/responses/buildings-response.model";
+import {buildDriverProvider} from "protractor/built/driverProviders";
 
 @Component({
   selector: "app-esri-map",
@@ -42,7 +45,7 @@ export class MapComponent implements OnInit, OnDestroy {
   graphicsLayer: esri.GraphicsLayer;
 
   // Attributes
-  zoom = 20;
+  zoom = 17;
   center: Array<number> = [26.049249, 44.439862];
   basemap = "streets-vector";
   loaded = false;
@@ -57,7 +60,8 @@ export class MapComponent implements OnInit, OnDestroy {
       setDefaultOptions({ css: true });
 
       // Load the modules for the ArcGIS API for JavaScript
-      const [esriConfig,
+      const [
+        esriConfig,
         Map,
         MapView,
         FeatureLayer,
@@ -175,6 +179,74 @@ export class MapComponent implements OnInit, OnDestroy {
     }
   }
 
+  addActivePlayers() {
+    WebsocketConnection.setActivePlayersHandler(players => {
+      this.graphicsLayer.removeAll();
+
+      players.forEach(player => {
+        const point = {
+          type: "point",
+          longitude: player.lon,
+          latitude: player.lat
+        };
+
+        this.pointGraphic = new this._Graphic({
+          geometry: point,
+          symbol: this.createMarker(player.color)
+        });
+
+        this.graphicsLayer.add(this.pointGraphic);
+      });
+    });
+  }
+
+  async addSafeZones() {
+    const buildingsResponse: BuildingsResponse = await HttpRequests.getBuildings();
+
+    const buildingsLayer = new this._GraphicsLayer();
+    buildingsResponse.buildings.forEach(building => {
+      const polygonPoints = building.points;
+      const polygon = {
+        type: "polygon",
+        rings: [
+          [polygonPoints[0][1], polygonPoints[0][0]],
+          [polygonPoints[1][1], polygonPoints[1][0]],
+          [polygonPoints[2][1], polygonPoints[2][0]],
+          [polygonPoints[3][1], polygonPoints[3][0]]
+        ]
+      };
+
+      const polygonColor = building.color;
+      const simpleFillSymbol = {
+        type: "simple-fill",
+        color: [polygonColor[0], polygonColor[1], polygonColor[2]],
+        outline: {
+          color: [255, 255, 255],
+          width: 1
+        }
+      };
+
+      const popupTemplate = {
+        title: "{Name}",
+        content: "{Description}"
+      }
+      const attributes = {
+        Name: building.name,
+        Description: `Corpul ${building.name}`
+      }
+
+      const polygonGraphic = new this._Graphic({
+        geometry: polygon,
+        symbol: simpleFillSymbol,
+
+        attributes: attributes,
+        popupTemplate: popupTemplate
+      });
+      buildingsLayer.add(polygonGraphic);
+    });
+    this.map.add(buildingsLayer);
+  }
+
   ngOnInit() {
     // Initialize MapView and return an instance of MapView
     this.initializeMap().then(async () => {
@@ -199,24 +271,10 @@ export class MapComponent implements OnInit, OnDestroy {
       }, 500);
 
       // update map with active players
-      WebsocketConnection.setActivePlayersHandler(players => {
-        this.graphicsLayer.removeAll();
+      this.addActivePlayers();
 
-        players.forEach(player => {
-          const point = {
-            type: "point",
-            longitude: player.lon,
-            latitude: player.lat
-          };
-
-          this.pointGraphic = new this._Graphic({
-            geometry: point,
-            symbol: this.createMarker(player.color)
-          });
-
-          this.graphicsLayer.add(this.pointGraphic);
-        });
-      })
+      // update map with safezones
+      await this.addSafeZones();
     });
   }
 
