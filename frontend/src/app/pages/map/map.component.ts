@@ -208,12 +208,7 @@ export class MapComponent implements OnInit, OnDestroy {
       const polygonPoints = building.points;
       const polygon = {
         type: "polygon",
-        rings: [
-          [polygonPoints[0][1], polygonPoints[0][0]],
-          [polygonPoints[1][1], polygonPoints[1][0]],
-          [polygonPoints[2][1], polygonPoints[2][0]],
-          [polygonPoints[3][1], polygonPoints[3][0]]
-        ]
+        rings: polygonPoints.map(point => [point[1], point[0]])
       };
 
       const polygonColor = building.color;
