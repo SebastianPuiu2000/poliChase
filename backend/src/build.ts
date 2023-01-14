@@ -1,7 +1,300 @@
 import Building from "./models/building";
+import Sector from "./models/sector";
 
 let location: [string, Array<[number, number]>];
 let locations: Array<[string, Array<[number, number]>]> = [];
+
+let sector: [string, [number, number]];
+let sectors: Array<[string, [number, number]]> = [];
+
+sector = [
+    "PR",
+    [44.43498, 26.04775]
+];
+
+sectors.push(sector);
+
+sector = [
+    "EC",
+    [44.43583, 26.04736]
+];
+
+sectors.push(sector);
+
+sector = [
+    "ED",
+    [44.43575, 26.04808]
+];
+
+sectors.push(sector);
+
+sector = [
+    "EF",
+    [44.43590, 26.04845]
+];
+
+sectors.push(sector);
+
+sector = [
+    "EB",
+    [44.43617, 26.04656]
+];
+
+sectors.push(sector);
+
+sector = [
+    "EA",
+    [44.43680, 26.04571]
+];
+
+sectors.push(sector);
+
+sector = [
+    "EG",
+    [44.43681, 26.04779]
+];
+
+sectors.push(sector);
+
+sector = [
+    "EJ",
+    [44.43763, 26.04726]
+];
+
+sectors.push(sector);
+
+sector = [
+    "EH",
+    [44.43761, 26.04879]
+];
+
+sectors.push(sector);
+
+sector = [
+    "EN",
+    [44.43800, 26.04837]
+];
+
+sectors.push(sector);
+
+sector = [
+    "EL",
+    [44.43860, 26.04902]
+];
+
+sectors.push(sector);
+
+sector = [
+    "EM",
+    [44.43846, 26.04811]
+];
+
+sectors.push(sector);
+
+sector = [
+    "FB",
+    [44.43859, 26.04591]
+];
+
+sectors.push(sector);
+
+sector = [
+    "FA",
+    [44.43889, 26.04651]
+];
+
+sectors.push(sector);
+
+sector = [
+    "Biblioteca",
+    [44.44115, 26.05139]
+];
+
+sectors.push(sector);
+
+sector = [
+    "D",
+    [44.43992, 26.04576]
+];
+
+sectors.push(sector);
+
+sector = [
+    "CI",
+    [44.44072, 26.04687]
+];
+
+sectors.push(sector);
+
+sector = [
+    "CH",
+    [44.44088, 26.04743]
+];
+
+sectors.push(sector);
+
+sector = [
+    "CG",
+    [44.44046, 26.04785]
+];
+
+sectors.push(sector);
+
+sector = [
+    "CF",
+    [44.44021, 26.04896]
+];
+
+sectors.push(sector);
+
+sector = [
+    "CK",
+    [44.43974, 26.04878]
+];
+
+sectors.push(sector);
+
+sector = [
+    "CD",
+    [44.44095, 26.04913]
+];
+
+sectors.push(sector);
+
+sector = [
+    "CE",
+    [44.44053, 26.04967]
+];
+
+sectors.push(sector);
+
+sector = [
+    "CB",
+    [44.44156, 26.04973]
+];
+
+sectors.push(sector);
+
+sector = [
+    "CA",
+    [44.44219, 26.05012]
+];
+
+sectors.push(sector);
+
+sector = [
+    "CJ",
+    [44.44221, 26.04956]
+];
+
+sectors.push(sector);
+
+sector = [
+    "Rectorat",
+    [44.43845, 26.05151]
+];
+
+sectors.push(sector);
+
+sector = [
+    "BN",
+    [44.43987, 26.05055]
+];
+
+sectors.push(sector);
+
+sector = [
+    "AN",
+    [44.43874, 26.05046]
+];
+
+sectors.push(sector);
+
+sector = [
+    "Aula",
+    [44.44047, 26.05175]
+];
+
+sectors.push(sector);
+
+sector = [
+    "JA",
+    [44.43971, 26.05266]
+];
+
+sectors.push(sector);
+
+sector = [
+    "JC",
+    [44.43936, 26.05327]
+];
+
+sectors.push(sector);
+
+sector = [
+    "JB",
+    [44.43972, 26.05346]
+];
+
+sectors.push(sector);
+
+sector = [
+    "JD",
+    [44.43920, 26.05401]
+];
+
+sectors.push(sector);
+
+sector = [
+    "JK",
+    [44.43994, 26.05396]
+];
+
+sectors.push(sector);
+
+sector = [
+    "JL",
+    [44.43959, 26.05439]
+];
+
+sectors.push(sector);
+
+sector = [
+    "JH",
+    [44.43875, 26.05397]
+];
+
+sectors.push(sector);
+
+sector = [
+    "JG",
+    [44.43846, 26.05328]
+];
+
+sectors.push(sector);
+
+sector = [
+    "JF",
+    [44.43872, 26.05255]
+];
+
+sectors.push(sector);
+
+sector = [
+    "JE",
+    [44.43914, 26.05278]
+];
+
+sectors.push(sector);
+
+sector = [
+    "Complex sportiv",
+    [44.43952, 26.05525]
+];
+
+sectors.push(sector);
+
+///////////////////
 
 location = [
   "Electrica",
@@ -140,3 +433,9 @@ export const addBuildings = async () => {
     Building.methods.createBuilding(value[0], value[1]);
   }
 };
+
+export const addSectors = async () => {
+    for (let value of sectors) {
+      Sector.methods.createSector(value[0], value[1]);
+    }
+  };
