@@ -12,7 +12,7 @@ import { infobuild } from "./handlers/infobuild";
 import websocket from "./handlers/socket";
 
 const getCredentials = () => {
-  const attrs = [{ name: 'commonName', value: process.env.HOST }];
+  const attrs = [{ name: 'commonName', value: process.env.HOST || 'localhost:3000' }];
   const keys = selfsigned.generate(attrs, { days: 365 });
   return { key: keys.private, cert: keys.cert };
 }
