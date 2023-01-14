@@ -3,7 +3,7 @@ import { WebSocketServer, WebSocket } from "ws";
 import { getToken, verify } from "../jwt";
 import User from "../models/user";
 import Building from "../models/building";
-import { circleCircle, inBuilding } from "../collision";
+import { circleCircle, inBuildings } from "../collision";
 
 interface Coord {
   lat: number;
@@ -27,7 +27,7 @@ const listen = async (server: any) => {
 
   let sockets = new Map<string, Player>();
   let currentBomb: null | string = null;
-  let buildings = (await Building.BuildingModel.find({}).exec()).map(build => build.points);
+  let buildings = (await Building.BuildingModel.find({}).exec()).map(build => ({points: build.points, name: build.name}));
 
   setInterval(() => {
     const players = Array.from(sockets)
@@ -66,7 +66,7 @@ const listen = async (server: any) => {
           other[1].coords.lon,
           0.00008
         ) &&
-        !inBuilding(other[1].coords.lat, other[1].coords.lon, buildings)
+        !inBuildings(other[1].coords.lat, other[1].coords.lon, buildings)
       ) {
         bombPlayer.cooldown = now + 10_000;
         currentBomb = other[0];
