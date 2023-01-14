@@ -21,4 +21,9 @@ export class ProfileComponent {
 
   }
 
+  onSignOutClick(): void {
+    this.router.navigateByUrl('/login');
+    WebsocketConnection.disconnect();
+  }
+
 }

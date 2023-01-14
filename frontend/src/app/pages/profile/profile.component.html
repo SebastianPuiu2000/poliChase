@@ -7,42 +7,57 @@
 
     <div class="col-6 offset-3">
       <form>
-        <div class="form-control">
+        <div class="form-floating">
+          <input
+                  type="email"
+                  id="username"
+                  class="form-control rounded-pill"
+                  placeholder="Place username here"
+                  #usernameInput>
           <label
-            for="staticEmail"
-            class="form-label rounded-pill">
-            Email
+                  for="username"
+                  class="form-label rounded-pill">
+            Username
           </label>
-          <input type="text" readonly class="form-control-plaintext rounded-pill" id="staticEmail" value="email test">
         </div>
         <br>
         <div class="form-floating">
           <input
-            type="password"
-            id="password"
-            class="form-control rounded-pill"
-            placeholder="Place password here"
-            #passwordInput>
+                  type="password"
+                  id="password"
+                  class="form-control rounded-pill"
+                  placeholder="Place password here"
+                  #passwordInput>
           <label
-            for="password"
-            class="form-label rounded-pill">
+                  for="password"
+                  class="form-label rounded-pill">
             Password
           </label>
         </div>
       </form>
     </div>
 
+    <div class="col-4 offset-4">
+      <button
+              class="btn w-100 rounded-pill"
+              style="color: white; background-color: #2abf52"
+              (click)="onSignOutClick()">
+        Sign out
+      </button>
+    </div>
+  </div>
+
   <div class="col-4 text-center h-100" style="background-color: #2abf52">
     <br><br><br><br><br><br><br><br><br><br><br>
-    <h1 class="text-light" style="font-size: 50px">New here?</h1>
+    <h1 class="text-light" style="font-size: 50px">Ready to play?</h1>
     <br>
-    <h3 class="text-light">Sign up and have fun!</h3>
+    <h3 class="text-light">Get chasing!</h3>
     <br>
     <button
-      class="btn w-75 rounded-pill"
-      style="color: black; background-color: white"
-      [routerLink]="'/register'">
-      Sign up
+            class="btn w-75 rounded-pill"
+            style="color: black; background-color: white"
+            [routerLink]="'/map'">
+      Back to map
     </button>
   </div>
 </div>
