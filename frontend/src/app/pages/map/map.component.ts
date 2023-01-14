@@ -42,7 +42,7 @@ export class MapComponent implements OnInit, OnDestroy {
   graphicsLayer: esri.GraphicsLayer;
 
   // Attributes
-  zoom = 15;
+  zoom = 20;
   center: Array<number> = [26.049249, 44.439862];
   basemap = "streets-vector";
   loaded = false;

@@ -2,7 +2,8 @@ import { JwtPayload } from "jsonwebtoken";
 import { WebSocketServer, WebSocket } from "ws";
 import { getToken, verify } from "../jwt";
 import User from "../models/user";
-import { circleCircle } from "../collision";
+import Building from "../models/building";
+import { circleCircle, inBuilding } from "../collision";
 
 interface Coord {
   lat: number;
@@ -21,11 +22,12 @@ interface Player {
   cooldown: EpochTimeStamp;
 }
 
-const listen = (server: any) => {
+const listen = async (server: any) => {
   const wss = new WebSocketServer({ server });
 
   let sockets = new Map<string, Player>();
   let currentBomb: null | string = null;
+  let buildings = (await Building.BuildingModel.find({}).exec()).map(build => build.points);
 
   setInterval(() => {
     const players = Array.from(sockets)
@@ -56,13 +58,15 @@ const listen = (server: any) => {
     for (const other of sockets.entries()) {
       if (
         other[0] != currentBomb &&
+        other[1].cooldown < now &&
         circleCircle(
           bombPlayer.coords.lat,
           bombPlayer.coords.lon,
           other[1].coords.lat,
           other[1].coords.lon,
           0.00008
-        ) && other[1].cooldown < now
+        ) &&
+        !inBuilding(other[1].coords.lat, other[1].coords.lon, buildings)
       ) {
         bombPlayer.cooldown = now + 10_000;
         currentBomb = other[0];
@@ -84,7 +88,7 @@ const listen = (server: any) => {
     }, 54_000)
   }, 60_000)
 
-  wss.on("connection", async function connection(socket, req) {
+  wss.on("connection", async (socket, req) => {
     const token = getToken(req.url);
 
     if (!token)

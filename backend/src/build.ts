@@ -3,6 +3,8 @@ import Building from "./models/building";
 let location: [string, Array<[number, number]>];
 let locations: Array<[string, Array<[number, number]>]> = [];
 
+const color = [195, 201, 10]; // R G B
+
 location = [
   "JK",
   [
@@ -445,10 +447,10 @@ locations.push(location);
 
 export const addBuildings = async () => {
   for (let value of locations) {
-    const building = await Building.BuildingModel.findOne({
+    await Building.BuildingModel.deleteOne({
       name: value[0],
     }).exec();
 
-    if (!building) await Building.methods.createBuilding(value[0], value[1]);
+    await Building.methods.createBuilding(value[0], value[1]);
   }
 };
