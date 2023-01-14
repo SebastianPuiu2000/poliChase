@@ -40,7 +40,6 @@ const main = async () => {
   app.get("/info", info);
   app.post("/color", color);
 
-  app.post("/build", build);
   app.get("/infobuild", infobuild);
 
   app.listen(3000, () => console.log("server started"));
