@@ -37,7 +37,6 @@ const listen = (server: any) => {
       }))
 
     console.log(`sockets: ${sockets.size}\tactive: ${players.length}`)
-    console.log(`bomb: ${currentBomb}`)
 
     const message = "active " + JSON.stringify(players);
 
@@ -62,11 +61,10 @@ const listen = (server: any) => {
           bombPlayer.coords.lon,
           other[1].coords.lat,
           other[1].coords.lon,
-          0.0001
+          0.00008
         ) && other[1].cooldown < now
       ) {
-        console.log("COLISION!");
-        bombPlayer.cooldown = now + 2_000;
+        bombPlayer.cooldown = now + 10_000;
         currentBomb = other[0];
         break;
       }
