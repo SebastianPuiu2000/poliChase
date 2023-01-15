@@ -143,28 +143,25 @@ export class MapComponent implements OnInit, OnDestroy {
         c = [0, 0, 0];
         break;
       case 'green':
-        c = [27, 219, 32];
+        c = [156, 202, 69];
         break;
       case 'red':
-        c = [224, 19, 45];
+        c = [255, 0, 14];
         break;
       case 'blue':
-        c = [10, 41, 210];
+        c = [0, 49, 249];
         break;
       case 'white':
-        c = [220, 220, 240];
+        c = [247, 221, 182];
         break;
       case 'yellow':
-        c = [195, 201, 10];
-        break;
-      case 'purple':
-        c = [180, 7, 230];
+        c = [233, 227, 56];
         break;
       case 'orange':
-        c = [230, 132, 20];
+        c = [255, 162, 40];
         break;
-      case 'cyan':
-        c = [12, 160, 203];
+      case 'purple':
+        c = [128, 18, 125];
         break;
     }
 

@@ -28,6 +28,11 @@ export class WebsocketConnection {
       this.connection.send(`move ${lat} ${lon}`);
   }
 
+  static sendColor(color: string): void {
+    if (this.connection)
+      this.connection.send(`color ${color}`);
+  }
+
   static disconnect(): void {
     if (this.connection)
       this.connection.close();

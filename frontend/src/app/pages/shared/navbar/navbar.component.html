@@ -5,6 +5,33 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item px-1">
+                    <button class="btn" style="color: yellowgreen; background-color: yellowgreen" (click)="onColorChange('green')">Color</button>
+                </li>
+                <li class="nav-item px-1">
+                    <button class="btn" style="color: red; background-color: red" (click)="onColorChange('red')">Color</button>
+                </li>
+                <li class="nav-item px-1">
+                    <button class="btn" style="color: blue; background-color: blue" (click)="onColorChange('blue')">Color</button>
+                </li>
+                <li class="nav-item px-1">
+                    <button class="btn" style="color: wheat; background-color: wheat" (click)="onColorChange('white')">Color</button>
+                </li>
+                <li class="nav-item px-1">
+                    <button class="btn" style="color: #e6e600; background-color: #e6e600" (click)="onColorChange('yellow')">Color</button>
+                </li>
+                <li class="nav-item px-1">
+                    <button class="btn" style="color: orange; background-color: orange" (click)="onColorChange('orange')">Color</button>
+                </li>
+                <li class="nav-item px-1">
+                    <button class="btn" style="color: purple; background-color: purple" (click)="onColorChange('purple')">Color</button>
+                </li>
+                <li class="nav-item px-1">
+                    <a class="nav-link" href="#">Score: {{ score }}</a>
+                </li>
+            </ul>
+
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="#" [routerLink]="'/profile'">Profile</a>
