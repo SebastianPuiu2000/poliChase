@@ -4,5 +4,4 @@ export class LoginResponse extends BaseResponse {
     constructor(public success: boolean, public token: string) {
         super(success);
     }
-
 }

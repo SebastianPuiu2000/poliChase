@@ -56,5 +56,4 @@ export class RegisterComponent {
     this.router.navigateByUrl('/login');
     this.registerSuccess = true;
   }
-
 }

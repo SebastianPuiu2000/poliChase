@@ -13,7 +13,6 @@ import esri = __esri;
 import { WebsocketConnection } from "../../shared/websocket-connection";
 import {HttpRequests} from "../../shared/http-requests";
 import {BuildingsResponse} from "../../shared/responses/buildings-response.model";
-import {buildDriverProvider} from "protractor/built/driverProviders";
 
 @Component({
   selector: "app-esri-map",
@@ -205,10 +204,9 @@ export class MapComponent implements OnInit, OnDestroy {
 
     const buildingsLayer = new this._GraphicsLayer();
     buildingsResponse.buildings.forEach(building => {
-      const polygonPoints = building.points;
       const polygon = {
         type: "polygon",
-        rings: polygonPoints.map(point => [point[1], point[0]])
+        rings: building.points.map(point => [point[1], point[0]])
       };
 
       const polygonColor = building.color;

@@ -3,6 +3,7 @@ import { BaseResponse } from "./responses/base-response.model";
 import { BACKEND_URL } from "./constants";
 import {BuildingsResponse} from "./responses/buildings-response.model";
 import axios from "axios";
+import {UserResponse} from "./responses/user-response.model";
 
 export class HttpRequests {
     static token: string;
@@ -33,8 +34,13 @@ export class HttpRequests {
             });
     }
 
-    static getPlayerInfo() {
+    static getUserInfo(): Promise<UserResponse> {
         return axios.get(BACKEND_URL + '/info' + `?token=${this.token}`)
-            .then()
+            .then(response => {
+                return response.data;
+            })
+            .catch(error => {
+                console.error(error);
+            });
     }
 }

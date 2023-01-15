@@ -1,8 +1,5 @@
-import { Component, ElementRef, ViewChild } from "@angular/core";
+import { Component } from "@angular/core";
 import { Router } from "@angular/router";
-import { HttpClient } from "@angular/common/http";
-import { LoginResponse } from "../../shared/responses/login-response.model";
-import { BACKEND_URL } from "../../shared/constants";
 import { WebsocketConnection } from "../../shared/websocket-connection";
 import { HttpRequests } from "../../shared/http-requests";
 
@@ -12,13 +9,13 @@ import { HttpRequests } from "../../shared/http-requests";
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent {
-  @ViewChild('usernameInput', {static: false}) usernameInputRef: ElementRef;
-  @ViewChild('passwordInput', {static: false}) passwordInputRef: ElementRef;
+  name: string;
+  email: string;
+  color: string;
+  score: number;
 
-  loginSuccess = true;
-
-  constructor(private router: Router, private http: HttpClient) {
-
+  constructor(private router: Router) {
+    this.getPlayerInfo();
   }
 
   onSignOutClick(): void {
@@ -26,4 +23,12 @@ export class ProfileComponent {
     WebsocketConnection.disconnect();
   }
 
+  private async getPlayerInfo(): Promise<void> {
+    const userResponse = await HttpRequests.getUserInfo();
+
+    this.name = userResponse.user.name;
+    this.email = userResponse.user.email;
+    this.color = userResponse.user.color;
+    this.score = userResponse.user.score;
+  }
 }
