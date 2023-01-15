@@ -17,7 +17,7 @@ const headers = {
   'Accept': 'application/json',
   'Content-Type': 'application/json'
 };
-const colors = ['green', 'red', 'white', 'blue', 'yellow', 'purple', 'cyan', 'orange'];
+const colors = ['green', 'red', 'blue', 'white', 'yellow', 'orange', 'purple'];
 
 const client = async (interactive, debug, proto) => {
   let secured = '';
