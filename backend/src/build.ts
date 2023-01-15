@@ -123,6 +123,18 @@ location = [
 locations.push(location);
 
 location = [
+  "JH",
+  colorJ,
+  [
+    [44.43897, 26.05348],
+    [44.43883, 26.05428],
+    [44.43865, 26.05422],
+    [44.43879, 26.05342],
+  ],
+];
+locations.push(location);
+
+location = [
   "SALA_SPORT",
   colorS,
   [
