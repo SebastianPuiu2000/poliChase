@@ -128,6 +128,10 @@ const listen = async (server: any) => {
           player.coords = { lat: parseFloat(msg[1]), lon: parseFloat(msg[2]) };
         } else if (msg[0] === "color") {
           player.color = msg[1];
+          var myquery = { _id: payload.id };
+          var newvalue = { color: player.color };
+
+          await User.UserModel.updateOne(myquery, newvalue).exec();
         }
       }
     });
