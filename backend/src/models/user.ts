@@ -64,4 +64,8 @@ const createUser = async (
   });
 };
 
-export default { UserModel, methods: { createUser } };
+const increaseScore = async (query: any, value: number) => {
+  await UserModel.updateMany(query, { $inc: { score: value } });
+}
+
+export default { UserModel, methods: { createUser, increaseScore } };

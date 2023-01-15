@@ -50,6 +50,7 @@ const listen = async (server: any) => {
 
     const bombPlayer = sockets.get(currentBomb);
     if (!bombPlayer) {
+      User.methods.increaseScore({ _id: currentBomb }, -30);
       currentBomb = null;
       return;
     }
@@ -84,6 +85,8 @@ const listen = async (server: any) => {
     currentBomb = keys[Math.floor(Math.random() * keys.length)]
 
     setTimeout(() => {
+      User.methods.increaseScore({ _id: { $in: keys }}, 10);
+      User.methods.increaseScore({ _id: currentBomb }, -40);
       currentBomb = null;
     }, 54_000)
   }, 60_000)
