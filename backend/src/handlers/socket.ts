@@ -27,7 +27,7 @@ const listen = async (server: any) => {
 
   let sockets = new Map<string, Player>();
   let currentBomb: null | string = null;
-  let buildings = (await Building.BuildingModel.find({}).exec()).map(build => ({points: build.points, name: build.name}));
+  let buildings = (await Building.BuildingModel.find({}).exec()).map(build => ({ points: build.points, name: build.name }));
 
   setInterval(() => {
     const players = Array.from(sockets)
@@ -50,6 +50,7 @@ const listen = async (server: any) => {
 
     const bombPlayer = sockets.get(currentBomb);
     if (!bombPlayer) {
+      User.methods.increaseScore({ _id: currentBomb }, -30);
       currentBomb = null;
       return;
     }
@@ -84,6 +85,8 @@ const listen = async (server: any) => {
     currentBomb = keys[Math.floor(Math.random() * keys.length)]
 
     setTimeout(() => {
+      User.methods.increaseScore({ _id: { $in: keys }}, 10);
+      User.methods.increaseScore({ _id: currentBomb }, -40);
       currentBomb = null;
     }, 54_000)
   }, 60_000)
@@ -118,11 +121,13 @@ const listen = async (server: any) => {
 
     socket.on("message", async (bytes) => {
       const msg = bytes.toString().split(" ");
+      const player = sockets.get(payload.id);
 
-      if (msg[0] === "move") {
-        const player = sockets.get(payload.id);
-        if (player) {
+      if (player) {
+        if (msg[0] === "move") {
           player.coords = { lat: parseFloat(msg[1]), lon: parseFloat(msg[2]) };
+        } else if (msg[0] === "color") {
+          player.color = msg[1];
         }
       }
     });

@@ -3,7 +3,6 @@ import {
   OnInit,
   ViewChild,
   ElementRef,
-  Input,
   Output,
   EventEmitter,
   OnDestroy
@@ -28,14 +27,8 @@ export class MapComponent implements OnInit, OnDestroy {
   // register Dojo AMD dependencies
   _Map;
   _MapView;
-  _FeatureLayer;
   _Graphic;
   _GraphicsLayer;
-  _Route;
-  _RouteParameters;
-  _FeatureSet;
-  _Point;
-  _Locator;
 
   // Instances
   map: esri.Map;
@@ -63,42 +56,22 @@ export class MapComponent implements OnInit, OnDestroy {
         esriConfig,
         Map,
         MapView,
-        FeatureLayer,
         Graphic,
-        Point,
         GraphicsLayer,
-        route,
-        locator,
-        RouteParameters,
-        FeatureSet,
-        Locate
       ] = await loadModules([
         "esri/config",
         "esri/Map",
         "esri/views/MapView",
-        "esri/layers/FeatureLayer",
         "esri/Graphic",
-        "esri/geometry/Point",
         "esri/layers/GraphicsLayer",
-        "esri/rest/route",
-        "esri/rest/locator",
-        "esri/rest/support/RouteParameters",
-        "esri/rest/support/FeatureSet",
-        "esri/widgets/Locate"
       ]);
 
       esriConfig.apiKey = "AAPK46bb416835724250a82b5955f095e09blM-sJFMyEUHbmgp2WHVfrYIwY3LK7vKyx8JPanN_2lsCUSdlHwUUsRMLsSF-KZN7";
 
       this._Map = Map;
       this._MapView = MapView;
-      this._FeatureLayer = FeatureLayer;
       this._Graphic = Graphic;
       this._GraphicsLayer = GraphicsLayer;
-      this._Route = route;
-      this._RouteParameters = RouteParameters;
-      this._Locator = locator;
-      this._FeatureSet = FeatureSet;
-      this._Point = Point;
 
       // Configure the Map
       const mapProperties = {
@@ -116,23 +89,11 @@ export class MapComponent implements OnInit, OnDestroy {
       };
 
       this.view = new MapView(mapViewProperties);
-
-      await this.view.when(); // wait for map to load
-      console.log("ArcGIS map loaded");
-
-      const locate = new Locate({
-        view: this.view,
-        useHeadingEnabled: false,
-        goToOverride: function(view, options) {
-          options.target.scale = 1500;
-          return view.goTo(options.target);
-        }
-      });
-      this.view.ui.add(locate, "top-left");
+      await this.view.when();
 
       return this.view;
     } catch (error) {
-      console.log("EsriLoader: ", error);
+      console.warn("EsriLoader: ", error);
     }
   }
 
@@ -199,17 +160,19 @@ export class MapComponent implements OnInit, OnDestroy {
   async addSafeZones() {
     const buildingsResponse: BuildingsResponse = await HttpRequests.getBuildings();
 
-    const buildingsLayer = new this._GraphicsLayer();
+    const buildingsLayer = new this._GraphicsLayer({
+      opacity: 0.8
+    });
+
     buildingsResponse.buildings.forEach(building => {
       const polygon = {
         type: "polygon",
         rings: building.points.map(point => [point[1], point[0]])
       };
 
-      const polygonColor = building.color;
       const simpleFillSymbol = {
         type: "simple-fill",
-        color: [polygonColor[0], polygonColor[1], polygonColor[2]],
+        color: building.color,
         outline: {
           color: [255, 255, 255],
           width: 1
