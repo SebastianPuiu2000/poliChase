@@ -143,7 +143,11 @@ export class MapComponent implements OnInit, OnDestroy {
             longitude: this.location[0],
             latitude: this.location[1]
           });
-          addGraphic("destination", event.mapPoint);
+          addGraphic("destination", {
+            type: "point",
+            longitude: event.mapPoint.longitude,
+            latitude:event.mapPoint.latitude,
+          });
           getRoute();
         }
       });
