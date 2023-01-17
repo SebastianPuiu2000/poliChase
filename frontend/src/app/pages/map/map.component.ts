@@ -10,8 +10,8 @@ import {
 import { setDefaultOptions, loadModules } from 'esri-loader';
 import esri = __esri;
 import { WebsocketConnection } from "../../shared/websocket-connection";
-import {HttpRequests} from "../../shared/http-requests";
-import {BuildingsResponse} from "../../shared/responses/buildings-response.model";
+import { HttpRequests } from "../../shared/http-requests";
+import { BuildingsResponse } from "../../shared/responses/buildings-response.model";
 
 @Component({
   selector: "app-esri-map",
@@ -27,8 +27,11 @@ export class MapComponent implements OnInit, OnDestroy {
   // register Dojo AMD dependencies
   _Map;
   _MapView;
+  _FeatureLayer;
   _Graphic;
   _GraphicsLayer;
+  _Locate;
+  _Route;
 
   // Instances
   map: esri.Map;
@@ -42,6 +45,7 @@ export class MapComponent implements OnInit, OnDestroy {
   basemap = "streets-vector";
   loaded = false;
   interval = null;
+  location = [0, 0];
 
   constructor() { }
 
@@ -56,14 +60,26 @@ export class MapComponent implements OnInit, OnDestroy {
         esriConfig,
         Map,
         MapView,
+        FeatureLayer,
         Graphic,
         GraphicsLayer,
+        Route,
+        Locator,
+        RouteParameters,
+        FeatureSet,
+        Locate
       ] = await loadModules([
         "esri/config",
         "esri/Map",
         "esri/views/MapView",
+        "esri/layers/FeatureLayer",
         "esri/Graphic",
         "esri/layers/GraphicsLayer",
+        "esri/rest/route",
+        "esri/rest/locator",
+        "esri/rest/support/RouteParameters",
+        "esri/rest/support/FeatureSet",
+        "esri/widgets/Locate"
       ]);
 
       esriConfig.apiKey = "AAPK46bb416835724250a82b5955f095e09blM-sJFMyEUHbmgp2WHVfrYIwY3LK7vKyx8JPanN_2lsCUSdlHwUUsRMLsSF-KZN7";
@@ -72,6 +88,9 @@ export class MapComponent implements OnInit, OnDestroy {
       this._MapView = MapView;
       this._Graphic = Graphic;
       this._GraphicsLayer = GraphicsLayer;
+      this._FeatureLayer = FeatureLayer;
+      this._Route = Route;
+      this._Locate = Locate;
 
       // Configure the Map
       const mapProperties = {
@@ -91,6 +110,64 @@ export class MapComponent implements OnInit, OnDestroy {
       this.view = new MapView(mapViewProperties);
       await this.view.when();
 
+      this.view.ui.add(new Locate({
+        view: this.view,
+        useHeadingEnabled: false,
+        goToOverride: function(view, options) {
+          options.target.scale = 1500;
+          return view.goTo(options.target);
+        }
+      }), "top-left");
+
+      const addGraphic = (type, point) => {
+        const graphic = new Graphic({
+          symbol: {
+            type: "simple-marker",
+            color: (type === "origin") ? "white" : "black",
+            size: "8px"
+          },
+          geometry: point
+        });
+
+        this.view.graphics.add(graphic);
+      }
+
+      const routeUrl = "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World";
+
+      this.view.on("click", (event) => {
+        if (this.view.graphics.length >= 2) {
+          this.view.graphics.removeAll();
+        } else {
+          addGraphic("origin", {
+            type: "point",
+            longitude: this.location[0],
+            latitude: this.location[1]
+          });
+          addGraphic("destination", event.mapPoint);
+          getRoute();
+        }
+      });
+
+      const getRoute = () => {
+        const routeParams = new RouteParameters({
+          stops: new FeatureSet({
+            features: this.view.graphics.toArray()
+          }),
+        });
+
+        this._Route.solve(routeUrl, routeParams)
+          .then((data) => {
+            data.routeResults.forEach((result) => {
+              result.route.symbol = {
+                type: "simple-line",
+                color: [5, 150, 255],
+                width: 3
+              };
+              this.view.graphics.add(result.route);
+            });
+          })
+      };
+
       return this.view;
     } catch (error) {
       console.warn("EsriLoader: ", error);
@@ -99,7 +176,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
   createMarker(color: string) {
     let c = [128, 128, 128];
-    switch(color) {
+    switch (color) {
       case 'bomb':
         c = [0, 0, 0];
         break;
@@ -204,7 +281,6 @@ export class MapComponent implements OnInit, OnDestroy {
     // Initialize MapView and return an instance of MapView
     this.initializeMap().then(async () => {
       // The map has been initialized
-      console.log("mapView ready: ", this.view.ready);
       this.loaded = this.view.ready;
       this.mapLoadedEvent.emit(true);
 
@@ -219,6 +295,7 @@ export class MapComponent implements OnInit, OnDestroy {
       // send location to backend
       this.interval = setInterval(() => {
         navigator.geolocation.getCurrentPosition(res => {
+          this.location = [res.coords.longitude, res.coords.latitude];
           WebsocketConnection.sendLocation(res.coords.latitude, res.coords.longitude);
         });
       }, 500);
